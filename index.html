@@ -519,6 +519,294 @@
                 padding: 12px;
             }
         }
+
+        /* Настройки */
+        .settings-group {
+            margin: 20px 0;
+            text-align: left;
+        }
+
+        .settings-group label {
+            display: block;
+            margin-bottom: 10px;
+            color: #aaa;
+            font-size: 1rem;
+        }
+
+        .slider-container {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .slider {
+            flex: 1;
+            height: 8px;
+            background: #333;
+            border-radius: 4px;
+            outline: none;
+            -webkit-appearance: none;
+            appearance: none;
+        }
+
+        .slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            background: #00ffcc;
+            cursor: pointer;
+            border-radius: 50%;
+        }
+
+        .slider::-moz-range-thumb {
+            width: 20px;
+            height: 20px;
+            background: #00ffcc;
+            cursor: pointer;
+            border-radius: 50%;
+            border: none;
+        }
+
+        .slider-value {
+            min-width: 50px;
+            text-align: center;
+            color: #fff;
+            font-size: 1.1rem;
+        }
+
+        /* Кнопка настроек в игре */
+        #settings-btn {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            width: 50px;
+            height: 50px;
+            background: rgba(0, 0, 0, 0.6);
+            border: 2px solid #444;
+            border-radius: 5px;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+        }
+
+        #settings-btn:hover {
+            background: rgba(0, 0, 0, 0.8);
+            border-color: #00ffcc;
+        }
+
+        /* Экран достижений */
+        #achievements-screen {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80%;
+            max-width: 900px;
+            height: 80%;
+            background: rgba(0, 0, 0, 0.95);
+            border: 4px solid #555;
+            padding: 20px;
+            z-index: 300;
+            overflow-y: auto;
+        }
+
+        #achievements-screen.active {
+            display: block;
+        }
+
+        .achievements-title {
+            text-align: center;
+            font-size: 2rem;
+            margin-bottom: 20px;
+            color: #FFD700;
+            text-shadow: 2px 2px 4px #000;
+        }
+
+        .achievements-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            gap: 15px;
+            padding: 20px;
+        }
+
+        .achievement-item {
+            width: 120px;
+            height: 120px;
+            background: rgba(50, 50, 50, 0.8);
+            border: 3px solid #444;
+            border-radius: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .achievement-item:hover {
+            background: rgba(70, 70, 70, 0.9);
+            border-color: #FFD700;
+            transform: scale(1.05);
+        }
+
+        .achievement-item.completed {
+            background: rgba(34, 139, 34, 0.3);
+            border-color: #32CD32;
+        }
+
+        .achievement-item.locked {
+            opacity: 0.4;
+        }
+
+        .achievement-icon {
+            font-size: 3rem;
+            margin-bottom: 5px;
+        }
+
+        .achievement-name {
+            font-size: 0.7rem;
+            text-align: center;
+            color: #fff;
+            padding: 0 5px;
+        }
+
+        .achievement-progress {
+            position: absolute;
+            bottom: 5px;
+            font-size: 0.6rem;
+            color: #aaa;
+        }
+
+        .achievement-tooltip {
+            position: fixed;
+            background: rgba(0, 0, 0, 0.95);
+            border: 2px solid #FFD700;
+            padding: 15px;
+            color: #fff;
+            font-size: 1rem;
+            pointer-events: none;
+            z-index: 1000;
+            display: none;
+            max-width: 300px;
+            border-radius: 5px;
+        }
+
+        .achievement-tooltip.show {
+            display: block;
+        }
+
+        .achievement-tooltip-title {
+            font-size: 1.2rem;
+            color: #FFD700;
+            margin-bottom: 10px;
+        }
+
+        .achievement-tooltip-desc {
+            color: #ccc;
+            margin-bottom: 10px;
+        }
+
+        .achievement-tooltip-progress {
+            color: #aaa;
+            font-size: 0.9rem;
+        }
+
+        /* Экран эффектов */
+        #effects-screen {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 400px;
+            max-height: 600px;
+            background: rgba(0, 0, 0, 0.95);
+            border: 4px solid #555;
+            padding: 20px;
+            z-index: 300;
+            overflow-y: auto;
+        }
+
+        #effects-screen.active {
+            display: block;
+        }
+
+        .effects-title {
+            text-align: center;
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            color: #00ffcc;
+            text-shadow: 2px 2px 4px #000;
+        }
+
+        .effects-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .effect-item {
+            background: rgba(50, 50, 50, 0.8);
+            border: 2px solid #444;
+            border-radius: 8px;
+            padding: 15px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .effect-icon {
+            font-size: 2.5rem;
+            min-width: 50px;
+            text-align: center;
+        }
+
+        .effect-info {
+            flex: 1;
+        }
+
+        .effect-name {
+            font-size: 1.2rem;
+            color: #fff;
+            margin-bottom: 5px;
+        }
+
+        .effect-time {
+            font-size: 0.9rem;
+            color: #aaa;
+        }
+
+        .no-effects {
+            text-align: center;
+            color: #888;
+            font-size: 1.2rem;
+            padding: 40px;
+        }
+
+        .close-screen-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(255, 0, 0, 0.5);
+            border: 2px solid red;
+            color: white;
+            padding: 5px 10px;
+            cursor: pointer;
+            font-family: var(--mc-font);
+            border-radius: 3px;
+        }
+
+        .close-screen-btn:hover {
+            background: rgba(255, 0, 0, 0.7);
+        }
     </style>
 </head>
 <body>
@@ -553,12 +841,71 @@
             <button class="btn" style="background: #2e7d32;" onclick="createNewWorld()">Создать!</button>
             <button class="btn" onclick="showScreen('worlds-menu')">Отмена</button>
         </div>
+
+        <div id="settings-menu" class="menu-screen">
+            <h2>⚙️ НАСТРОЙКИ</h2>
+            
+            <div class="settings-group">
+                <label>Размер интерфейса: <span id="ui-scale-value">100%</span></label>
+                <div class="slider-container">
+                    <input type="range" min="50" max="150" value="100" class="slider" id="ui-scale-slider">
+                </div>
+            </div>
+
+            <div class="settings-group">
+                <label>Громкость музыки: <span id="music-volume-value">40%</span></label>
+                <div class="slider-container">
+                    <input type="range" min="0" max="100" value="40" class="slider" id="music-volume-slider">
+                </div>
+            </div>
+
+            <div class="settings-group">
+                <label>Громкость звуков: <span id="sound-volume-value">30%</span></label>
+                <div class="slider-container">
+                    <input type="range" min="0" max="100" value="30" class="slider" id="sound-volume-slider">
+                </div>
+            </div>
+
+            <button class="btn" onclick="saveSettings()">Сохранить</button>
+            <button class="btn" onclick="closeSettings()">Назад</button>
+        </div>
     </div>
 
     <div id="game-ui">
         <canvas id="gameCanvas"></canvas>
         
-        <div id="controls-hint">ЛКМ - Добывать/Ставить | E/У - Инвентарь | 1-9 - Смена слота | Мышь - Камера | Макс. стак: 128</div>
+        <button id="settings-btn" onclick="openGameSettings()">⚙️</button>
+
+        <!-- Меню настроек в игре -->
+        <div id="settings-menu-game" class="menu-screen">
+            <h2>⚙️ НАСТРОЙКИ</h2>
+            
+            <div class="settings-group">
+                <label>Размер интерфейса: <span id="ui-scale-value-game">100%</span></label>
+                <div class="slider-container">
+                    <input type="range" min="50" max="150" value="100" class="slider" id="ui-scale-slider-game">
+                </div>
+            </div>
+
+            <div class="settings-group">
+                <label>Громкость музыки: <span id="music-volume-value-game">40%</span></label>
+                <div class="slider-container">
+                    <input type="range" min="0" max="100" value="40" class="slider" id="music-volume-slider-game">
+                </div>
+            </div>
+
+            <div class="settings-group">
+                <label>Громкость звуков: <span id="sound-volume-value-game">30%</span></label>
+                <div class="slider-container">
+                    <input type="range" min="0" max="100" value="30" class="slider" id="sound-volume-slider-game">
+                </div>
+            </div>
+
+            <button class="btn" onclick="saveSettingsGame()">Сохранить</button>
+            <button class="btn" onclick="closeSettingsGame()">Назад</button>
+        </div>
+        
+        <div id="controls-hint">ЛКМ - Добывать/Ставить | E/У - Инвентарь | X/Ч - Достижения | Z/Я - Эффекты | 1-9 - Смена слота | Мышь - Камера | Макс. стак: 128</div>
         <button class="back-btn" onclick="exitGame()">В меню</button>
 
         <div id="hud">
@@ -741,17 +1088,38 @@
     <!-- Всплывающая подсказка -->
     <div id="item-tooltip"></div>
 
+    <!-- Экран достижений -->
+    <div id="achievements-screen">
+        <button class="close-screen-btn" onclick="closeAchievements()">✕</button>
+        <div class="achievements-title">🏆 ДОСТИЖЕНИЯ 🏆</div>
+        <div class="achievements-grid" id="achievements-grid"></div>
+    </div>
+
+    <!-- Всплывающая подсказка для достижений -->
+    <div id="achievement-tooltip" class="achievement-tooltip">
+        <div class="achievement-tooltip-title" id="achievement-tooltip-title"></div>
+        <div class="achievement-tooltip-desc" id="achievement-tooltip-desc"></div>
+        <div class="achievement-tooltip-progress" id="achievement-tooltip-progress"></div>
+    </div>
+
+    <!-- Экран эффектов -->
+    <div id="effects-screen">
+        <button class="close-screen-btn" onclick="closeEffects()">✕</button>
+        <div class="effects-title">✨ АКТИВНЫЕ ЭФФЕКТЫ ✨</div>
+        <div class="effects-list" id="effects-list"></div>
+    </div>
+
     <script>
         // --- Константы ---
         const TILE_SIZE = 32;
         const GRAVITY = 0.8;
-        const PLAYER_SPEED = 5;
-        const JUMP_FORCE = -15;
+        const PLAYER_SPEED = 3; // Уменьшена скорость (было 5)
+        const JUMP_FORCE = -12; // Прыжок на высоту ~3 блоков (было -15)
         const PLAYER_WIDTH = 26;
         const PLAYER_HEIGHT = 56;
         const REACH_DISTANCE = 150; // Радиус добычи блоков (в пикселях)
 
-        // Блоки: 0-воздух, 1-трава, 2-земля, 3-камень, 4-уголь, 5-железо, 6-золото, 7-алмаз, 8-дерево, 9-листва, 10-вода, 11-лава
+        // Блоки: 0-воздух, 1-трава, 2-земля, 3-камень, 4-уголь, 5-железо, 6-золото, 7-алмаз, 8-дерево, 9-листва, 10-вода, 11-лава, 29-обсидиан, 30-гравий, 31-портал, 32-незерак
 
         // --- Переменные ---
         let canvas, ctx;
@@ -763,6 +1131,19 @@
         let worlds = JSON.parse(localStorage.getItem('cw_worlds_v2')) || [];
         let currentWorld = null; // Текущий загруженный мир
         let gameLoopId;
+
+        // Настройки
+        let gameSettings = {
+            uiScale: 100,
+            musicVolume: 40,
+            soundVolume: 30
+        };
+
+        // Загружаем настройки из localStorage
+        const savedSettings = localStorage.getItem('cw_settings');
+        if (savedSettings) {
+            gameSettings = JSON.parse(savedSettings);
+        }
 
         // Инвентарь хотбара (9 слотов) - теперь объекты с типом и количеством
         let hotbarItems = [
@@ -809,33 +1190,40 @@
         let currentChestStorage = Array(27).fill(null).map(() => ({ type: null, count: 0, durability: null }));
 
         // Определяем какие предметы являются рудами (нельзя размещать)
-        const oreItems = ['coal_ore', 'iron_ore', 'gold_ore', 'diamond_ore'];
+        const oreItems = ['coal_ore', 'iron_ore', 'gold_ore', 'diamond_ore', 'gold_ore_nether'];
         
         // Инструменты (не стакаются)
         const toolItems = [
-            'pickaxe', 'hand', 'axe', 'shovel', 'sword', 
-            'stone_pickaxe', 'stone_axe', 'stone_sword',
-            'iron_pickaxe', 'iron_axe', 'iron_sword',
-            'diamond_pickaxe', 'diamond_axe', 'diamond_sword',
-            'shears', 'bucket', 'golden_apple', 'bed'
+            'pickaxe', 'hand', 'axe', 'shovel', 'sword', 'hoe',
+            'stone_pickaxe', 'stone_axe', 'stone_shovel', 'stone_sword', 'stone_hoe',
+            'iron_pickaxe', 'iron_axe', 'iron_shovel', 'iron_sword', 'iron_hoe',
+            'diamond_pickaxe', 'diamond_axe', 'diamond_shovel', 'diamond_sword', 'diamond_hoe',
+            'shears', 'bucket', 'water_bucket', 'golden_apple', 'bed', 'lighter'
         ];
         
         // Прочность инструментов
         const toolDurability = {
             'pickaxe': 50,
             'axe': 60,
-            'shovel': 60,
+            'shovel': 50,
             'sword': 45,
+            'hoe': 50,
             'stone_pickaxe': 90,
             'stone_axe': 132,
+            'stone_shovel': 80,
             'stone_sword': 87,
+            'stone_hoe': 80,
             'iron_pickaxe': 130,
             'iron_axe': 251,
+            'iron_shovel': 100,
             'iron_sword': 112,
+            'iron_hoe': 100,
             'diamond_pickaxe': 300,
             'diamond_axe': 300,
+            'diamond_shovel': 340,
             'diamond_sword': 323,
-            'shears': 238
+            'diamond_hoe': 340,
+            'shears': 100
         };
         
         // Урон оружия
@@ -855,6 +1243,10 @@
         function getMiningClicks(blockType, toolType) {
             const isOre = [4, 5, 6, 7].includes(blockType); // Руды
             const isStone = blockType === 3; // Камень
+            const isGrassDirt = [1, 2].includes(blockType); // Трава и земля
+            const isWood = blockType === 8; // Дерево
+            const isSand = blockType === 12; // Песок
+            const isNetherrack = blockType === 32; // Незерак
             
             // Определяем базовое количество кликов
             let clicks = blockHardness[blockType] || 1;
@@ -869,16 +1261,20 @@
                 // Каменная кирка
                 if (isOre) return 8;
                 if (isStone) return 5;
+                if (isNetherrack) return 3;
                 return 5;
             } else if (toolType === 'iron_pickaxe') {
                 // Железная кирка
                 if (isOre) return 5;
                 if (isStone) return 3;
+                if (isNetherrack) return 2;
                 return 3;
             } else if (toolType === 'diamond_pickaxe') {
                 // Алмазная кирка
+                if (blockType === 29) return 7; // Обсидиан - 7 кликов
                 if (isOre) return 2;
                 if (isStone) return 1;
+                if (isNetherrack) return 1;
                 return 1;
             } else if (toolType === 'axe' || toolType === 'stone_axe' || toolType === 'iron_axe' || toolType === 'diamond_axe') {
                 // Топоры быстрее рубят дерево
@@ -889,6 +1285,23 @@
             } else if (toolType === 'shears') {
                 // Ножницы мгновенно добывают листву
                 if (blockType === 9) return 1;
+            } else if (toolType === 'shovel') {
+                // Деревянная лопата
+                if (isGrassDirt) return 5;
+            } else if (toolType === 'stone_shovel') {
+                // Каменная лопата
+                if (isGrassDirt) return 4;
+            } else if (toolType === 'iron_shovel') {
+                // Железная лопата
+                if (isGrassDirt) return 2;
+            } else if (toolType === 'diamond_shovel') {
+                // Алмазная лопата
+                if (isGrassDirt) return 1;
+            } else if (toolType === 'hand') {
+                // Добыча рукой
+                if (isWood) return 10; // Дерево - 10 кликов
+                if (isGrassDirt) return 7; // Трава/земля - 7 кликов
+                if (isSand) return 5; // Песок - 5 кликов
             }
             
             // Для остальных случаев используем базовую прочность
@@ -897,6 +1310,21 @@
         
         // Проверка возможности добычи блока
         function canMineBlock(blockType, toolType) {
+            // Киркой нельзя добывать: доски(13), листву(9), дерево(8), землю(2), песок(12), траву(1)
+            const pickaxeBlacklist = [1, 2, 8, 9, 12, 13];
+            if (toolType === 'pickaxe' || toolType === 'stone_pickaxe' || toolType === 'iron_pickaxe' || toolType === 'diamond_pickaxe') {
+                if (pickaxeBlacklist.includes(blockType)) {
+                    return false;
+                }
+            }
+            
+            // Обсидиан можно добыть только алмазной киркой
+            if (blockType === 29) {
+                if (toolType !== 'diamond_pickaxe') {
+                    return false;
+                }
+            }
+            
             // Деревянная кирка не может добыть железную и алмазную руду
             if (toolType === 'pickaxe') {
                 if (blockType === 5 || blockType === 7) return false; // Железо и алмазы
@@ -904,6 +1332,10 @@
             // Каменная кирка не может добыть алмазную руду
             else if (toolType === 'stone_pickaxe') {
                 if (blockType === 7) return false; // Алмазы
+            }
+            // Лопаты могут добывать только траву и землю
+            else if (toolType === 'shovel' || toolType === 'stone_shovel' || toolType === 'iron_shovel' || toolType === 'diamond_shovel') {
+                if (blockType !== 1 && blockType !== 2) return false; // Только трава (1) и земля (2)
             }
             
             return true;
@@ -944,7 +1376,15 @@
             20: 'sand',
             21: 'wool',
             22: 'bed',
-            23: 'bed' // Вторая часть кровати тоже дропает кровать
+            23: 'bed', // Вторая часть кровати тоже дропает кровать
+            24: 'dirt', // Грядка дропает землю
+            25: 'wheat_seeds', // Пшеница стадия 1
+            26: 'wheat_seeds', // Пшеница стадия 2
+            27: 'wheat', // Пшеница стадия 3 (зрелая)
+            28: 'torch', // Факел
+            29: 'obsidian', // Обсидиан
+            30: 'gravel', // Гравий
+            32: 'netherrack' // Незерак
         };
 
         // Маппинг предметов в блоки (только для размещаемых)
@@ -964,7 +1404,10 @@
             'fence': 19,
             'sand': 20,
             'wool': 21,
-            'bed': 22 // Кровать (занимает 2 блока: 22 и 23)
+            'bed': 22, // Кровать (занимает 2 блока: 22 и 23)
+            'torch': 28, // Факел
+            'gravel': 30, // Гравий
+            'netherrack': 32 // Незерак
         };
 
         let player = {
@@ -975,14 +1418,130 @@
             oxygen: 100, maxOxygen: 100,
             isUnderwater: false,
             lastHungerTick: 0,
-            lastOxygenTick: 0
+            lastOxygenTick: 0,
+            fallDistance: 0 // Для отслеживания высоты падения
         };
+        
+        // Измерение (dimension): 'overworld' или 'nether'
+        let currentDimension = 'overworld';
+        let netherWorldData = []; // Данные мира Ада
+        let overworldPlayerPos = { x: 0, y: 0 }; // Позиция игрока в обычном мире
+        let netherPlayerPos = { x: 0, y: 0 }; // Позиция игрока в Аду
+        let teleportScreen = false;
+        let teleportTimer = 0;
+        let teleportMessage = '';
+        
+        // Система достижений
+        let achievements = {
+            'first_tree': { unlocked: false, progress: 0, max: 1 },
+            'first_pickaxe': { unlocked: false, progress: 0, max: 1 },
+            'stone_age': { unlocked: false, progress: 0, max: 1 },
+            'getting_wood': { unlocked: false, progress: 0, max: 10 },
+            'miner': { unlocked: false, progress: 0, max: 100 },
+            'iron_man': { unlocked: false, progress: 0, max: 1 },
+            'diamonds': { unlocked: false, progress: 0, max: 1 },
+            'farmer': { unlocked: false, progress: 0, max: 10 },
+            'baker': { unlocked: false, progress: 0, max: 1 },
+            'monster_hunter': { unlocked: false, progress: 0, max: 10 },
+            'explorer': { unlocked: false, progress: 0, max: 1000 },
+            'deep_dive': { unlocked: false, progress: 0, max: 1 },
+            'nether_portal': { unlocked: false, progress: 0, max: 1 },
+            'we_need_to_go_deeper': { unlocked: false, progress: 0, max: 1 },
+            'master_crafter': { unlocked: false, progress: 0, max: 50 }
+        };
+        
+        let achievementsOpen = false;
+        let effectsOpen = false;
+        let totalBlocksMined = 0;
+        let totalDistanceTraveled = 0;
+        let lastPlayerX = 0;
 
         // Мобы
         let mobs = [];
         let droppedItems = [];
         let mobSpawnTimer = 0;
         let autoSaveTimer = 0;
+        
+        // Система распада листвы
+        let decayingLeaves = []; // Массив для листвы которая должна распасться { x, y, timer }
+        
+        // Система роста пшеницы
+        let growingCrops = []; // Массив растущих культур { x, y, stage, timer }
+        
+        // Обновление роста пшеницы
+        function updateGrowingCrops(deltaTime) {
+            for (let i = growingCrops.length - 1; i >= 0; i--) {
+                const crop = growingCrops[i];
+                
+                // Проверяем что блок всё ещё пшеница
+                const blockType = worldData[crop.y][crop.x];
+                if (blockType < 25 || blockType > 27) {
+                    growingCrops.splice(i, 1);
+                    continue;
+                }
+                
+                // Проверяем условия роста: свет и вода
+                const hasLight = checkLightNearby(crop.x, crop.y);
+                const hasWater = checkWaterNearby(crop.x, crop.y);
+                
+                if (hasLight && hasWater) {
+                    crop.timer += deltaTime;
+                    
+                    // Время роста: 6-10 минут = 360000-600000 мс, делим на 3 стадии
+                    const growthTime = 120000 + Math.random() * 80000; // 2-3.3 минуты на стадию
+                    
+                    if (crop.timer >= growthTime) {
+                        crop.timer = 0;
+                        crop.stage++;
+                        
+                        if (crop.stage === 1 && blockType === 25) {
+                            worldData[crop.y][crop.x] = 26; // Стадия 2
+                        } else if (crop.stage === 2 && blockType === 26) {
+                            worldData[crop.y][crop.x] = 27; // Стадия 3 (зрелая)
+                            growingCrops.splice(i, 1); // Удаляем из списка растущих
+                        }
+                    }
+                }
+            }
+        }
+        
+        // Проверка света рядом с грядкой
+        function checkLightNearby(x, y) {
+            // Проверяем дневной свет (день)
+            if (dayNightCycle < 0.25) return true;
+            
+            // Проверяем факелы в радиусе 5 блоков
+            for (let dy = -5; dy <= 5; dy++) {
+                for (let dx = -5; dx <= 5; dx++) {
+                    const checkX = x + dx;
+                    const checkY = y + dy;
+                    
+                    if (checkY >= 0 && checkY < worldData.length && checkX >= 0 && checkX < worldData[0].length) {
+                        if (worldData[checkY][checkX] === 28) { // Факел (блок 28)
+                            return true;
+                        }
+                    }
+                }
+            }
+            return false;
+        }
+        
+        // Проверка воды рядом с грядкой (радиус 3 блока)
+        function checkWaterNearby(x, y) {
+            for (let dy = -3; dy <= 3; dy++) {
+                for (let dx = -3; dx <= 3; dx++) {
+                    const checkX = x + dx;
+                    const checkY = y + dy;
+                    
+                    if (checkY >= 0 && checkY < worldData.length && checkX >= 0 && checkX < worldData[0].length) {
+                        if (worldData[checkY][checkX] === 10 || worldData[checkY][checkX] === 11) { // Вода
+                            return true;
+                        }
+                    }
+                }
+            }
+            return false;
+        }
 
         // День и ночь
         let dayNightCycle = 0; // 0-1 (0 = полдень, 0.5 = полночь)
@@ -1024,6 +1583,23 @@
                 new Audio('sounds/step_stone_1.WAV'),
                 new Audio('sounds/step_stone_2.WAV'),
                 new Audio('sounds/step_stone_3.WAV')
+            ],
+            step_planks: [
+                new Audio('sounds/step_planks_1.WAV'),
+                new Audio('sounds/step_planks_2.WAV'),
+                new Audio('sounds/step_planks_3.WAV')
+            ],
+            step_wet_grass: [
+                new Audio('sounds/step_wet_grass_1.WAV'),
+                new Audio('sounds/step_wet_grass_2.WAV'),
+                new Audio('sounds/step_wet_grass_3.WAV')
+            ],
+            // Звуки добычи блоков
+            knock_grass: new Audio('sounds/knock_grass_1.wav'),
+            knock_stone: new Audio('sounds/knock_stone_1.WAV'),
+            knock_planks: [
+                new Audio('sounds/knock_planks_1.wav'),
+                new Audio('sounds/knock_planks_2.wav')
             ],
             pickup: new Audio('sounds/pick up.mp3'),
             rain: new Audio('sounds/rain.mp3')
@@ -1069,7 +1645,9 @@
             20: 2,  // Песок - 2 клика
             21: 1,  // Шерсть - 1 клик
             22: 2,  // Кровать (левая часть) - 2 клика
-            23: 2   // Кровать (правая часть) - 2 клика
+            23: 2,  // Кровать (правая часть) - 2 клика
+            30: 2,  // Гравий - 2 клика
+            32: 3   // Незерак - 3 клика
         };
 
         // Текущий добываемый блок
@@ -1280,8 +1858,28 @@
         function handleKeyDown(e) {
             keys[e.code] = true;
             
-            // Закрытие инвентаря/верстака/печи/сундука на ESC
+            // Открыть достижения на X или KeyX (русская Ч)
+            if (e.code === 'KeyX') {
+                toggleAchievements();
+                return;
+            }
+            
+            // Открыть эффекты на Z или KeyZ (русская Я)
+            if (e.code === 'KeyZ') {
+                toggleEffects();
+                return;
+            }
+            
+            // Закрытие инвентаря/верстака/печи/сундука/достижений/эффектов на ESC
             if (e.code === 'Escape') {
+                if (achievementsOpen) {
+                    closeAchievements();
+                    return;
+                }
+                if (effectsOpen) {
+                    closeEffects();
+                    return;
+                }
                 if (inventoryOpen) {
                     closeInventory();
                     return;
@@ -1302,8 +1900,32 @@
             
             // Открытие инвентаря (E или У)
             if (e.code === 'KeyE' || e.code === 'KeyU') {
-                if (!workbenchOpen && !furnaceOpen && !chestOpen) {
+                if (!workbenchOpen && !furnaceOpen && !chestOpen && !achievementsOpen && !effectsOpen) {
                     toggleInventory();
+                }
+                return;
+            }
+            
+            // Открытие достижений (X или Ч)
+            if (e.code === 'KeyX') {
+                if (!inventoryOpen && !workbenchOpen && !furnaceOpen && !chestOpen && !effectsOpen) {
+                    toggleAchievements();
+                }
+                return;
+            }
+            
+            // Открытие эффектов (Z или Я)
+            if (e.code === 'KeyZ') {
+                if (!inventoryOpen && !workbenchOpen && !furnaceOpen && !chestOpen && !achievementsOpen) {
+                    toggleEffects();
+                }
+                return;
+            }
+            
+            // Открытие настроек (K или Л)
+            if (e.code === 'KeyK') {
+                if (!inventoryOpen && !workbenchOpen && !furnaceOpen && !chestOpen && !achievementsOpen && !effectsOpen) {
+                    openGameSettings();
                 }
                 return;
             }
@@ -1476,6 +2098,9 @@
 
             // Увеличиваем прогресс добычи
             miningBlock.progress++;
+            
+            // Воспроизводим звук добычи
+            playMiningSound(blockType);
 
             // Если блок добыт
             if (miningBlock.progress >= miningBlock.maxProgress) {
@@ -1493,6 +2118,28 @@
 
         function breakBlock(x, y, blockType) {
             worldData[y][x] = 0; // Превращаем в воздух
+            
+            // Достижения - добыча блоков
+            totalBlocksMined++;
+            checkAchievement('miner', 1);
+            
+            // Достижение за дерево
+            if (blockType === 8) {
+                checkAchievement('first_tree', 1);
+                checkAchievement('getting_wood', 1);
+                checkLeafDecay(x, y);
+            }
+            
+            // Достижение за алмазы
+            if (blockType === 7) {
+                checkAchievement('diamonds', 1);
+            }
+            
+            // Достижение за глубину
+            const depth = y - 20;
+            if (depth >= 100) {
+                checkAchievement('deep_dive', 1);
+            }
             
             // Если ломаем кровать, ломаем и вторую часть
             if (blockType === 22 && x + 1 < worldData[0].length && worldData[y][x + 1] === 23) {
@@ -1520,9 +2167,17 @@
                         // Иначе ничего не выпадает
                     }
                 }
-                // Особый случай для травы - шанс выпадения пшеницы
+                // Особый случай для гравия - шанс выпадения кремня
+                else if (blockType === 30) {
+                    if (Math.random() < 0.3) { // 30% шанс выпадения кремня
+                        spawnDroppedItem(x * TILE_SIZE + TILE_SIZE / 2, y * TILE_SIZE + TILE_SIZE / 2, 'flint');
+                    } else {
+                        spawnDroppedItem(x * TILE_SIZE + TILE_SIZE / 2, y * TILE_SIZE + TILE_SIZE / 2, 'gravel');
+                    }
+                }
+                // Особый случай для травы - шанс выпадения семян пшеницы
                 else if (blockType === 1 && Math.random() < 0.15) {
-                    spawnDroppedItem(x * TILE_SIZE + TILE_SIZE / 2, y * TILE_SIZE + TILE_SIZE / 2, 'wheat');
+                    spawnDroppedItem(x * TILE_SIZE + TILE_SIZE / 2, y * TILE_SIZE + TILE_SIZE / 2, 'wheat_seeds');
                 } 
                 // Кровать дропает только 1 предмет независимо от того какую часть сломали
                 else if (blockType === 22 || blockType === 23) {
@@ -1550,12 +2205,87 @@
                 }
             }
         }
+        
+        // Проверка распада листвы после срубки дерева
+        function checkLeafDecay(treeX, treeY) {
+            // Проверяем листву в радиусе 5 блоков от срубленного дерева
+            const radius = 5;
+            for (let dy = -radius; dy <= radius; dy++) {
+                for (let dx = -radius; dx <= radius; dx++) {
+                    const checkX = treeX + dx;
+                    const checkY = treeY + dy;
+                    
+                    if (checkY >= 0 && checkY < worldData.length && checkX >= 0 && checkX < worldData[0].length) {
+                        if (worldData[checkY][checkX] === 9) { // Листва
+                            // Проверяем есть ли рядом дерево
+                            if (!hasNearbyWood(checkX, checkY)) {
+                                // Добавляем в список распадающейся листвы
+                                const delay = 10000 + Math.random() * 5000; // 10-15 секунд
+                                decayingLeaves.push({ x: checkX, y: checkY, timer: delay });
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        
+        // Проверка наличия дерева рядом с листвой
+        function hasNearbyWood(leafX, leafY) {
+            const checkRadius = 4;
+            for (let dy = -checkRadius; dy <= checkRadius; dy++) {
+                for (let dx = -checkRadius; dx <= checkRadius; dx++) {
+                    const checkX = leafX + dx;
+                    const checkY = leafY + dy;
+                    
+                    if (checkY >= 0 && checkY < worldData.length && checkX >= 0 && checkX < worldData[0].length) {
+                        if (worldData[checkY][checkX] === 8) { // Дерево
+                            return true;
+                        }
+                    }
+                }
+            }
+            return false;
+        }
+        
+        // Обновление распадающейся листвы
+        function updateDecayingLeaves(deltaTime) {
+            for (let i = decayingLeaves.length - 1; i >= 0; i--) {
+                const leaf = decayingLeaves[i];
+                leaf.timer -= deltaTime;
+                
+                if (leaf.timer <= 0) {
+                    // Ломаем листву
+                    if (worldData[leaf.y][leaf.x] === 9) {
+                        worldData[leaf.y][leaf.x] = 0;
+                        // Шанс выпадения яблока
+                        if (Math.random() < 0.1) {
+                            spawnDroppedItem(leaf.x * TILE_SIZE + TILE_SIZE / 2, leaf.y * TILE_SIZE + TILE_SIZE / 2, 'apple');
+                        }
+                    }
+                    decayingLeaves.splice(i, 1);
+                }
+            }
+        }
 
         function placeBlock(x, y) {
             const currentItem = hotbarItems[activeSlot];
             
             // Проверяем что у нас есть предмет
             if (!currentItem.type || currentItem.count <= 0) return;
+            
+            // Особая логика для ведра с водой - выливаем воду
+            if (currentItem.type === 'water_bucket') {
+                // В Аду нельзя размещать воду
+                if (currentDimension === 'nether') {
+                    showNotification('В Аду вода испаряется!', 'warning');
+                    return;
+                }
+                worldData[y][x] = 10; // Размещаем воду
+                currentItem.type = 'bucket'; // Ведро становится пустым
+                updateHotbarDisplay();
+                showNotification('Вылили воду', 'info');
+                return;
+            }
             
             // Проверяем что это не инструмент и не руда
             if (currentItem.type === 'pickaxe' || currentItem.type === 'hand') return;
@@ -1600,9 +2330,15 @@
                 // Размещаем оба блока кровати
                 worldData[y][x] = 22; // Левая часть
                 worldData[y][x + 1] = 23; // Правая часть
+                
+                // Воспроизводим звук размещения
+                playPlaceSound(22);
             } else {
                 // Размещаем обычный блок
                 worldData[y][x] = blockType;
+                
+                // Воспроизводим звук размещения
+                playPlaceSound(blockType);
             }
             
             // Уменьшаем количество предметов
@@ -1616,6 +2352,17 @@
         }
 
         function addToInventory(itemType) {
+            // Проверяем достижения за получение предметов
+            if (itemType === 'iron_ingot') {
+                checkAchievement('iron_man', 1);
+            }
+            if (itemType === 'wheat') {
+                checkAchievement('farmer', 1);
+            }
+            if (itemType === 'bread') {
+                checkAchievement('baker', 1);
+            }
+            
             // Сначала ищем существующий стак в хотбаре
             for (let i = 0; i < hotbarItems.length; i++) {
                 if (hotbarItems[i].type === itemType && hotbarItems[i].count < 128) {
@@ -1682,19 +2429,28 @@
                 'axe': '🪓',
                 'shovel': '🔨',
                 'sword': '⚔️',
+                'hoe': '🔨',
                 'stone_pickaxe': '⛏️',
                 'stone_axe': '🪓',
+                'stone_shovel': '🔨',
                 'stone_sword': '⚔️',
+                'stone_hoe': '🔨',
                 'iron_pickaxe': '⛏️',
                 'iron_axe': '🪓',
+                'iron_shovel': '🔨',
                 'iron_sword': '⚔️',
+                'iron_hoe': '🔨',
                 'diamond_pickaxe': '⛏️',
                 'diamond_axe': '🪓',
+                'diamond_shovel': '🔨',
                 'diamond_sword': '⚔️',
+                'diamond_hoe': '🔨',
                 'shears': '✂️',
                 'bucket': '🪣',
+                'water_bucket': '💧',
                 'golden_apple': '🍏',
                 'bed': '🛏️',
+                'lighter': '🔥',
                 'grass': '🟩',
                 'dirt': '🟫',
                 'stone': '⬜',
@@ -1721,11 +2477,21 @@
                 'ladder': '🪜',
                 'fence': '🚧',
                 'wheat': '🌾',
+                'wheat_seeds': '🌱',
                 'bread': '🍞',
                 'sand': '🟨',
                 'rotten_flesh': '🥩',
                 'wool': '🧶',
-                'clock': '⏰'
+                'clock': '⏰',
+                'obsidian': '⬛',
+                'gravel': '⬜',
+                'flint': '🪨',
+                'netherrack': '🟥',
+                'gold_ore_nether': '🟡',
+                'farmland': '🟫',
+                'wheat_stage_0': '🌱',
+                'wheat_stage_1': '🌿',
+                'wheat_stage_2': '🌾'
             };
             return emojis[itemType] || '❓';
         }
@@ -1737,17 +2503,25 @@
                 'axe': 'Деревянный топор',
                 'shovel': 'Деревянная лопата',
                 'sword': 'Деревянный меч',
+                'hoe': 'Деревянная мотыга',
                 'stone_pickaxe': 'Каменная кирка',
                 'stone_axe': 'Каменный топор',
+                'stone_shovel': 'Каменная лопата',
                 'stone_sword': 'Каменный меч',
+                'stone_hoe': 'Каменная мотыга',
                 'iron_pickaxe': 'Железная кирка',
                 'iron_axe': 'Железный топор',
+                'iron_shovel': 'Железная лопата',
                 'iron_sword': 'Железный меч',
+                'iron_hoe': 'Железная мотыга',
                 'diamond_pickaxe': 'Алмазная кирка',
                 'diamond_axe': 'Алмазный топор',
+                'diamond_shovel': 'Алмазная лопата',
                 'diamond_sword': 'Алмазный меч',
+                'diamond_hoe': 'Алмазная мотыга',
                 'shears': 'Ножницы',
                 'bucket': 'Ведро',
+                'water_bucket': 'Ведро с водой',
                 'golden_apple': 'Золотое яблоко',
                 'bed': 'Кровать',
                 'grass': 'Блок травы',
@@ -1776,11 +2550,18 @@
                 'ladder': 'Лестница',
                 'fence': 'Забор',
                 'wheat': 'Пшеница',
+                'wheat_seeds': 'Семена пшеницы',
                 'bread': 'Хлеб',
                 'sand': 'Песок',
                 'rotten_flesh': 'Гнилая плоть',
                 'wool': 'Шерсть',
-                'clock': 'Часы'
+                'clock': 'Часы',
+                'obsidian': 'Обсидиан',
+                'gravel': 'Гравий',
+                'flint': 'Кремень',
+                'lighter': 'Зажигалка',
+                'netherrack': 'Незерак',
+                'farmland': 'Грядка'
             };
             return names[itemType] || 'Неизвестный предмет';
         }
@@ -1819,7 +2600,217 @@
             inventoryOpen = false;
             document.getElementById('inventory-screen').classList.remove('active');
         }
-
+        
+        // --- ДОСТИЖЕНИЯ ---
+        function toggleAchievements() {
+            achievementsOpen = !achievementsOpen;
+            const screen = document.getElementById('achievements-screen');
+            
+            if (achievementsOpen) {
+                screen.classList.add('active');
+                updateAchievementsDisplay();
+                keys = {};
+            } else {
+                screen.classList.remove('active');
+            }
+        }
+        
+        function closeAchievements() {
+            achievementsOpen = false;
+            document.getElementById('achievements-screen').classList.remove('active');
+            document.getElementById('achievement-tooltip').classList.remove('show');
+        }
+        
+        // --- ЭФФЕКТЫ ---
+        function toggleEffects() {
+            effectsOpen = !effectsOpen;
+            const screen = document.getElementById('effects-screen');
+            
+            if (effectsOpen) {
+                screen.classList.add('active');
+                updateEffectsDisplay();
+                keys = {};
+            } else {
+                screen.classList.remove('active');
+            }
+        }
+        
+        function closeEffects() {
+            effectsOpen = false;
+            document.getElementById('effects-screen').classList.remove('active');
+        }
+        
+        function updateEffectsDisplay() {
+            const list = document.getElementById('effects-list');
+            list.innerHTML = '';
+            
+            let hasActiveEffects = false;
+            
+            // Проверяем все эффекты
+            const now = performance.now();
+            
+            if (playerEffects.hunger.active && playerEffects.hunger.endTime > now) {
+                hasActiveEffects = true;
+                const timeLeft = Math.ceil((playerEffects.hunger.endTime - now) / 1000);
+                const minutes = Math.floor(timeLeft / 60);
+                const seconds = timeLeft % 60;
+                
+                const effectItem = document.createElement('div');
+                effectItem.className = 'effect-item';
+                effectItem.innerHTML = `
+                    <div class="effect-icon">🍖</div>
+                    <div class="effect-info">
+                        <div class="effect-name">Голод</div>
+                        <div class="effect-time">Осталось: ${minutes}:${seconds.toString().padStart(2, '0')}</div>
+                    </div>
+                `;
+                list.appendChild(effectItem);
+            }
+            
+            if (!hasActiveEffects) {
+                list.innerHTML = '<div class="no-effects">Нет активных эффектов</div>';
+            }
+        }
+        
+        function updateAchievementsDisplay() {
+            const grid = document.getElementById('achievements-grid');
+            grid.innerHTML = '';
+            
+            const achievementsList = [
+                { id: 'first_tree', icon: '🌳', name: 'Первое дерево', desc: 'Срубите дерево' },
+                { id: 'getting_wood', icon: '🪵', name: 'Лесоруб', desc: 'Добудьте 10 блоков дерева' },
+                { id: 'first_pickaxe', icon: '⛏️', name: 'Первая кирка', desc: 'Скрафтите деревянную кирку' },
+                { id: 'stone_age', icon: '⬜', name: 'Каменный век', desc: 'Скрафтите каменную кирку' },
+                { id: 'miner', icon: '💎', name: 'Шахтёр', desc: 'Добудьте 100 блоков' },
+                { id: 'iron_man', icon: '⚙️', name: 'Железный человек', desc: 'Получите железный слиток' },
+                { id: 'diamonds', icon: '💎', name: 'Алмазы!', desc: 'Добудьте алмаз' },
+                { id: 'farmer', icon: '🌾', name: 'Фермер', desc: 'Соберите 10 пшеницы' },
+                { id: 'baker', icon: '🍞', name: 'Пекарь', desc: 'Испеките хлеб' },
+                { id: 'monster_hunter', icon: '⚔️', name: 'Охотник', desc: 'Убейте 10 мобов' },
+                { id: 'explorer', icon: '🗺️', name: 'Исследователь', desc: 'Пройдите 1000 блоков' },
+                { id: 'deep_dive', icon: '⬇️', name: 'Глубины', desc: 'Спуститесь на глубину 100 блоков' },
+                { id: 'nether_portal', icon: '🔥', name: 'Портал', desc: 'Постройте портал в Ад' },
+                { id: 'we_need_to_go_deeper', icon: '😈', name: 'Нужно идти глубже', desc: 'Войдите в Ад' },
+                { id: 'master_crafter', icon: '🔧', name: 'Мастер крафта', desc: 'Скрафтите 50 предметов' }
+            ];
+            
+            achievementsList.forEach(ach => {
+                const item = document.createElement('div');
+                item.className = 'achievement-item';
+                
+                const data = achievements[ach.id];
+                if (data.unlocked) {
+                    item.classList.add('completed');
+                } else {
+                    item.classList.add('locked');
+                }
+                
+                item.innerHTML = `
+                    <div class="achievement-icon">${ach.icon}</div>
+                    <div class="achievement-name">${ach.name}</div>
+                    <div class="achievement-progress">${data.progress}/${data.max}</div>
+                `;
+                
+                item.onmouseenter = (e) => {
+                    showAchievementTooltip(ach, data, e.clientX, e.clientY);
+                };
+                
+                item.onmouseleave = () => {
+                    hideAchievementTooltip();
+                };
+                
+                grid.appendChild(item);
+            });
+        }
+        
+        function showAchievementTooltip(ach, data, x, y) {
+            const tooltip = document.getElementById('achievement-tooltip');
+            document.getElementById('achievement-tooltip-title').textContent = ach.name;
+            document.getElementById('achievement-tooltip-desc').textContent = ach.desc;
+            document.getElementById('achievement-tooltip-progress').textContent = 
+                data.unlocked ? '✅ Выполнено!' : `Прогресс: ${data.progress}/${data.max}`;
+            
+            tooltip.style.left = (x + 10) + 'px';
+            tooltip.style.top = (y + 10) + 'px';
+            tooltip.classList.add('show');
+        }
+        
+        function hideAchievementTooltip() {
+            document.getElementById('achievement-tooltip').classList.remove('show');
+        }
+        
+        function unlockAchievement(id) {
+            if (!achievements[id].unlocked && achievements[id].progress >= achievements[id].max) {
+                achievements[id].unlocked = true;
+                
+                // Показываем уведомление
+                const achievementNames = {
+                    'first_tree': 'Первое дерево',
+                    'getting_wood': 'Лесоруб',
+                    'first_pickaxe': 'Первая кирка',
+                    'stone_age': 'Каменный век',
+                    'miner': 'Шахтёр',
+                    'iron_man': 'Железный человек',
+                    'diamonds': 'Алмазы!',
+                    'farmer': 'Фермер',
+                    'baker': 'Пекарь',
+                    'monster_hunter': 'Охотник',
+                    'explorer': 'Исследователь',
+                    'deep_dive': 'Глубины',
+                    'nether_portal': 'Портал',
+                    'we_need_to_go_deeper': 'Нужно идти глубже',
+                    'master_crafter': 'Мастер крафта'
+                };
+                
+                showNotification(`🏆 Достижение: ${achievementNames[id]}!`, 'success');
+                
+                // Сохраняем достижения
+                if (currentWorld) {
+                    saveAchievements();
+                }
+            }
+        }
+        
+        function checkAchievement(id, increment = 1) {
+            if (!achievements[id].unlocked) {
+                achievements[id].progress += increment;
+                if (achievements[id].progress >= achievements[id].max) {
+                    unlockAchievement(id);
+                }
+            }
+        }
+        
+        // Обновление достижения "Исследователь"
+        function updateExplorerAchievement() {
+            const currentX = Math.floor(player.x / TILE_SIZE);
+            const distance = Math.abs(currentX - lastPlayerX);
+            
+            if (distance > 0) {
+                totalDistanceTraveled += distance;
+                checkAchievement('explorer', distance);
+                lastPlayerX = currentX;
+            }
+        }
+        
+        // --- ЭФФЕКТЫ ---
+        function toggleEffects() {
+            effectsOpen = !effectsOpen;
+            const screen = document.getElementById('effects-screen');
+            
+            if (effectsOpen) {
+                screen.classList.add('active');
+                updateEffectsDisplay();
+                keys = {};
+            } else {
+                screen.classList.remove('active');
+            }
+        }
+        
+        function closeEffects() {
+            effectsOpen = false;
+            document.getElementById('effects-screen').classList.remove('active');
+        }
+        
         function updateInventoryDisplay() {
             // Обновляем основной инвентарь
             const invGrid = document.getElementById('inventory-grid');
@@ -1927,8 +2918,17 @@
                 targetSlot = craftingGrid[index];
             }
 
-            // ПРАВАЯ КНОПКА МЫШИ - разделение стака
+            // ПРАВАЯ КНОПКА МЫШИ
             if (isRightClick) {
+                // Проверяем разборку инструмента (если не держим предмет)
+                if (!heldItem && targetSlot.type && toolDisassembly[targetSlot.type]) {
+                    disassembleTool(targetSlot);
+                    updateInventoryDisplay();
+                    updateHotbarDisplay();
+                    return;
+                }
+                
+                // Обычная логика разделения стака
                 if (!heldItem) {
                     // Берем половину стака (или 1 если нечетное)
                     if (targetSlot.type && targetSlot.count > 0) {
@@ -2004,6 +3004,55 @@
             updateHotbarDisplay();
         }
 
+        // Разборка инструмента
+        function disassembleTool(slot) {
+            if (!slot.type || !toolDisassembly[slot.type]) return;
+            
+            const materials = toolDisassembly[slot.type];
+            let canDisassemble = true;
+            
+            // Проверяем есть ли место в инвентаре
+            for (let material of materials) {
+                let neededSpace = material.count;
+                
+                // Проверяем существующие стаки
+                for (let item of [...hotbarItems, ...inventoryItems]) {
+                    if (item.type === material.type && item.count < 128) {
+                        neededSpace -= (128 - item.count);
+                        if (neededSpace <= 0) break;
+                    }
+                }
+                
+                // Проверяем пустые слоты
+                if (neededSpace > 0) {
+                    const emptySlots = [...hotbarItems, ...inventoryItems].filter(item => !item.type || item.count === 0).length;
+                    if (emptySlots === 0) {
+                        canDisassemble = false;
+                        break;
+                    }
+                }
+            }
+            
+            if (!canDisassemble) {
+                showNotification('Недостаточно места в инвентаре!', 'warning');
+                return;
+            }
+            
+            // Удаляем инструмент
+            slot.type = null;
+            slot.count = 0;
+            slot.durability = null;
+            
+            // Добавляем материалы
+            for (let material of materials) {
+                for (let i = 0; i < material.count; i++) {
+                    addToInventory(material.type);
+                }
+            }
+            
+            showNotification('Инструмент разобран!', 'success');
+        }
+
         // --- КРАФТ ---
         const craftingRecipes = [
             // Доски из дерева
@@ -2024,8 +3073,40 @@
             {
                 pattern: [null, 'planks', null, 'planks'],
                 result: { type: 'stick', count: 4 }
+            },
+            // Зажигалка (кремень + железный слиток)
+            {
+                pattern: ['flint', null, null, 'iron_ingot'],
+                result: { type: 'lighter', count: 1 }
             }
         ];
+
+        // Маппинг разборки инструментов (возвращает материалы)
+        const toolDisassembly = {
+            'pickaxe': [{ type: 'planks', count: 3 }, { type: 'stick', count: 2 }],
+            'axe': [{ type: 'planks', count: 3 }, { type: 'stick', count: 2 }],
+            'shovel': [{ type: 'planks', count: 1 }, { type: 'stick', count: 2 }],
+            'sword': [{ type: 'planks', count: 2 }, { type: 'stick', count: 1 }],
+            'hoe': [{ type: 'planks', count: 2 }, { type: 'stick', count: 2 }],
+            'stone_pickaxe': [{ type: 'stone', count: 3 }, { type: 'stick', count: 2 }],
+            'stone_axe': [{ type: 'stone', count: 3 }, { type: 'stick', count: 2 }],
+            'stone_shovel': [{ type: 'stone', count: 1 }, { type: 'stick', count: 2 }],
+            'stone_sword': [{ type: 'stone', count: 2 }, { type: 'stick', count: 1 }],
+            'stone_hoe': [{ type: 'stone', count: 2 }, { type: 'stick', count: 2 }],
+            'iron_pickaxe': [{ type: 'iron_ingot', count: 3 }, { type: 'stick', count: 2 }],
+            'iron_axe': [{ type: 'iron_ingot', count: 3 }, { type: 'stick', count: 2 }],
+            'iron_shovel': [{ type: 'iron_ingot', count: 1 }, { type: 'stick', count: 2 }],
+            'iron_sword': [{ type: 'iron_ingot', count: 2 }, { type: 'stick', count: 1 }],
+            'iron_hoe': [{ type: 'iron_ingot', count: 2 }, { type: 'stick', count: 2 }],
+            'diamond_pickaxe': [{ type: 'diamond', count: 3 }, { type: 'stick', count: 2 }],
+            'diamond_axe': [{ type: 'diamond', count: 3 }, { type: 'stick', count: 2 }],
+            'diamond_shovel': [{ type: 'diamond', count: 1 }, { type: 'stick', count: 2 }],
+            'diamond_sword': [{ type: 'diamond', count: 2 }, { type: 'stick', count: 1 }],
+            'diamond_hoe': [{ type: 'diamond', count: 2 }, { type: 'stick', count: 2 }],
+            'shears': [{ type: 'iron_ingot', count: 2 }],
+            'bucket': [{ type: 'iron_ingot', count: 3 }],
+            'clock': [{ type: 'gold_ingot', count: 8 }, { type: 'diamond', count: 1 }]
+        };
 
         // Рецепты для верстака 3x3
         const craftingRecipes3x3 = [
@@ -2048,6 +3129,15 @@
                 pattern: [null, 'planks', null, null, 'stick', null, null, 'stick', null],
                 result: { type: 'shovel', count: 1 }
             },
+            // Деревянная мотыга
+            {
+                pattern: ['planks', 'planks', null, null, 'stick', null, null, 'stick', null],
+                result: { type: 'hoe', count: 1 }
+            },
+            {
+                pattern: [null, 'planks', 'planks', null, 'stick', null, null, 'stick', null],
+                result: { type: 'hoe', count: 1 }
+            },
             // Деревянный меч
             {
                 pattern: [null, 'planks', null, null, 'planks', null, null, 'stick', null],
@@ -2067,6 +3157,20 @@
                 pattern: [null, 'stone', 'stone', null, 'stick', 'stone', null, 'stick', null],
                 result: { type: 'stone_axe', count: 1 }
             },
+            // Каменная лопата
+            {
+                pattern: [null, 'stone', null, null, 'stick', null, null, 'stick', null],
+                result: { type: 'stone_shovel', count: 1 }
+            },
+            // Каменная мотыга
+            {
+                pattern: ['stone', 'stone', null, null, 'stick', null, null, 'stick', null],
+                result: { type: 'stone_hoe', count: 1 }
+            },
+            {
+                pattern: [null, 'stone', 'stone', null, 'stick', null, null, 'stick', null],
+                result: { type: 'stone_hoe', count: 1 }
+            },
             // Каменный меч
             {
                 pattern: [null, 'stone', null, null, 'stone', null, null, 'stick', null],
@@ -2085,6 +3189,20 @@
             {
                 pattern: [null, 'iron_ingot', 'iron_ingot', null, 'stick', 'iron_ingot', null, 'stick', null],
                 result: { type: 'iron_axe', count: 1 }
+            },
+            // Железная лопата
+            {
+                pattern: [null, 'iron_ingot', null, null, 'stick', null, null, 'stick', null],
+                result: { type: 'iron_shovel', count: 1 }
+            },
+            // Железная мотыга
+            {
+                pattern: ['iron_ingot', 'iron_ingot', null, null, 'stick', null, null, 'stick', null],
+                result: { type: 'iron_hoe', count: 1 }
+            },
+            {
+                pattern: [null, 'iron_ingot', 'iron_ingot', null, 'stick', null, null, 'stick', null],
+                result: { type: 'iron_hoe', count: 1 }
             },
             // Железный меч
             {
@@ -2162,6 +3280,20 @@
                 pattern: [null, 'diamond', 'diamond', null, 'stick', 'diamond', null, 'stick', null],
                 result: { type: 'diamond_axe', count: 1 }
             },
+            // Алмазная лопата
+            {
+                pattern: [null, 'diamond', null, null, 'stick', null, null, 'stick', null],
+                result: { type: 'diamond_shovel', count: 1 }
+            },
+            // Алмазная мотыга
+            {
+                pattern: ['diamond', 'diamond', null, null, 'stick', null, null, 'stick', null],
+                result: { type: 'diamond_hoe', count: 1 }
+            },
+            {
+                pattern: [null, 'diamond', 'diamond', null, 'stick', null, null, 'stick', null],
+                result: { type: 'diamond_hoe', count: 1 }
+            },
             // Алмазный меч
             {
                 pattern: [null, 'diamond', null, null, 'diamond', null, null, 'stick', null],
@@ -2235,6 +3367,15 @@
             // Добавляем результат в инвентарь
             addToInventory(recipe.result.type);
             
+            // Достижения за крафт
+            checkAchievement('master_crafter', 1);
+            if (recipe.result.type === 'pickaxe') {
+                checkAchievement('first_pickaxe', 1);
+            }
+            if (recipe.result.type === 'stone_pickaxe') {
+                checkAchievement('stone_age', 1);
+            }
+            
             updateCraftingDisplay();
             updateInventoryDisplay();
             updateHotbarDisplay();
@@ -2291,6 +3432,87 @@
             startGame(newWorld);
         }
 
+        // --- Настройки ---
+        function openGameSettings() {
+            // Останавливаем игру
+            isRunning = false;
+            
+            // Показываем меню настроек
+            document.getElementById('settings-menu-game').classList.add('active');
+            
+            // Загружаем текущие значения
+            document.getElementById('ui-scale-slider-game').value = gameSettings.uiScale;
+            document.getElementById('music-volume-slider-game').value = gameSettings.musicVolume;
+            document.getElementById('sound-volume-slider-game').value = gameSettings.soundVolume;
+            
+            updateSettingsDisplayGame();
+            
+            // Добавляем обработчики слайдеров
+            document.getElementById('ui-scale-slider-game').oninput = updateSettingsDisplayGame;
+            document.getElementById('music-volume-slider-game').oninput = updateSettingsDisplayGame;
+            document.getElementById('sound-volume-slider-game').oninput = updateSettingsDisplayGame;
+            
+            keys = {}; // Сбрасываем клавиши
+        }
+
+        function updateSettingsDisplayGame() {
+            const uiScale = document.getElementById('ui-scale-slider-game').value;
+            const musicVolume = document.getElementById('music-volume-slider-game').value;
+            const soundVolume = document.getElementById('sound-volume-slider-game').value;
+            
+            document.getElementById('ui-scale-value-game').textContent = uiScale + '%';
+            document.getElementById('music-volume-value-game').textContent = musicVolume + '%';
+            document.getElementById('sound-volume-value-game').textContent = soundVolume + '%';
+        }
+
+        function saveSettingsGame() {
+            gameSettings.uiScale = parseInt(document.getElementById('ui-scale-slider-game').value);
+            gameSettings.musicVolume = parseInt(document.getElementById('music-volume-slider-game').value);
+            gameSettings.soundVolume = parseInt(document.getElementById('sound-volume-slider-game').value);
+            
+            // Сохраняем в localStorage
+            localStorage.setItem('cw_settings', JSON.stringify(gameSettings));
+            
+            // Применяем настройки
+            applySettings();
+            
+            closeSettingsGame();
+            showNotification('Настройки сохранены', 'success');
+        }
+
+        function closeSettingsGame() {
+            document.getElementById('settings-menu-game').classList.remove('active');
+            isRunning = true;
+        }
+
+        function applySettings() {
+            // Применяем масштаб интерфейса
+            const scale = gameSettings.uiScale / 100;
+            document.getElementById('hotbar').style.transform = `translateX(-50%) scale(${scale})`;
+            document.getElementById('hud').style.transform = `translateX(-50%) scale(${scale})`;
+            
+            if (isMobile) {
+                document.getElementById('mobile-controls').style.transform = `scale(${scale})`;
+                document.getElementById('mobile-controls').style.transformOrigin = 'bottom left';
+            }
+            
+            // Применяем громкость звуков
+            const soundVol = gameSettings.soundVolume / 100;
+            Object.values(sounds).forEach(soundOrArray => {
+                if (Array.isArray(soundOrArray)) {
+                    soundOrArray.forEach(sound => {
+                        sound.volume = 0.3 * soundVol;
+                    });
+                } else {
+                    if (soundOrArray === sounds.rain) {
+                        soundOrArray.volume = 0.2 * soundVol;
+                    } else {
+                        soundOrArray.volume = 0.4 * soundVol;
+                    }
+                }
+            });
+        }
+
         function startGame(world) {
             document.getElementById('screens').style.display = 'none';
             document.getElementById('game-ui').style.display = 'block';
@@ -2310,15 +3532,25 @@
                 hotbarItems = savedData.hotbarItems;
                 inventoryItems = savedData.inventoryItems;
                 chestStorages = savedData.chestStorages || {};
+                achievements = savedData.achievements || resetAchievements();
+                totalBlocksMined = savedData.totalBlocksMined || 0;
+                totalDistanceTraveled = savedData.totalDistanceTraveled || 0;
             } else {
                 // Генерируем новый мир
                 generateWorld(world.type);
                 spawnPlayer();
                 resetSurvivalStats();
+                resetInventory();
                 chestStorages = {};
+                achievements = resetAchievements();
+                totalBlocksMined = 0;
+                totalDistanceTraveled = 0;
             }
             
             updateHotbarDisplay();
+            
+            // Инициализируем позицию для достижения исследователя
+            lastPlayerX = Math.floor(player.x / TILE_SIZE);
             
             // Инициализируем облака
             initClouds();
@@ -2336,6 +3568,8 @@
             // Очищаем мобов и предметы
             mobs = [];
             droppedItems = [];
+            decayingLeaves = [];
+            growingCrops = [];
             mobSpawnTimer = 0;
             autoSaveTimer = 0;
             
@@ -2346,6 +3580,9 @@
                 document.getElementById('mobile-controls').classList.add('active');
                 document.getElementById('inventory-btn-mobile').classList.add('active');
             }
+            
+            // Применяем настройки
+            applySettings();
             
             gameLoopId = requestAnimationFrame(gameLoop);
         }
@@ -2378,6 +3615,43 @@
             showScreen('main-menu');
         }
 
+        // Сброс инвентаря для нового мира
+        function resetInventory() {
+            hotbarItems = [
+                { type: 'pickaxe', count: 1, durability: 100 },
+                { type: 'hand', count: 1, durability: null },
+                { type: null, count: 0, durability: null },
+                { type: null, count: 0, durability: null },
+                { type: null, count: 0, durability: null },
+                { type: null, count: 0, durability: null },
+                { type: null, count: 0, durability: null },
+                { type: null, count: 0, durability: null },
+                { type: null, count: 0, durability: null }
+            ];
+            inventoryItems = Array(27).fill(null).map(() => ({ type: null, count: 0, durability: null }));
+        }
+        
+        // Сброс достижений для нового мира
+        function resetAchievements() {
+            return {
+                'first_tree': { unlocked: false, progress: 0, max: 1 },
+                'first_pickaxe': { unlocked: false, progress: 0, max: 1 },
+                'stone_age': { unlocked: false, progress: 0, max: 1 },
+                'getting_wood': { unlocked: false, progress: 0, max: 10 },
+                'miner': { unlocked: false, progress: 0, max: 100 },
+                'iron_man': { unlocked: false, progress: 0, max: 1 },
+                'diamonds': { unlocked: false, progress: 0, max: 1 },
+                'farmer': { unlocked: false, progress: 0, max: 10 },
+                'baker': { unlocked: false, progress: 0, max: 1 },
+                'monster_hunter': { unlocked: false, progress: 0, max: 10 },
+                'explorer': { unlocked: false, progress: 0, max: 1000 },
+                'deep_dive': { unlocked: false, progress: 0, max: 1 },
+                'nether_portal': { unlocked: false, progress: 0, max: 1 },
+                'we_need_to_go_deeper': { unlocked: false, progress: 0, max: 1 },
+                'master_crafter': { unlocked: false, progress: 0, max: 50 }
+            };
+        }
+        
         // --- СОХРАНЕНИЕ И ЗАГРУЗКА ---
         function saveWorldData(worldId) {
             const saveData = {
@@ -2391,6 +3665,9 @@
                 hotbarItems: hotbarItems,
                 inventoryItems: inventoryItems,
                 chestStorages: chestStorages,
+                achievements: achievements,
+                totalBlocksMined: totalBlocksMined,
+                totalDistanceTraveled: totalDistanceTraveled,
                 timestamp: Date.now()
             };
             
@@ -2450,7 +3727,7 @@
         function generateWorld(type) {
             worldData = [];
             const width = 500; // Увеличен размер мира
-            const height = 100; // Увеличена высота
+            const height = 200; // Увеличена глубина мира (было 150)
 
             for (let y = 0; y < height; y++) {
                 worldData[y] = [];
@@ -2472,25 +3749,29 @@
                         // Спавн руд на разных глубинах
                         const depth = y - groundLevel;
                         
-                        // Уголь (глубина 5-20, шанс 5%)
-                        if (depth >= 5 && depth <= 20 && Math.random() < 0.05) {
+                        // Уголь (глубина 5-30, шанс 5%)
+                        if (depth >= 5 && depth <= 30 && Math.random() < 0.05) {
                             block = 4;
                         }
-                        // Железо (глубина 10-30, шанс 3%)
-                        else if (depth >= 10 && depth <= 30 && Math.random() < 0.03) {
+                        // Гравий (глубина 5-30, шанс 3%)
+                        else if (depth >= 5 && depth <= 30 && Math.random() < 0.03) {
+                            block = 30;
+                        }
+                        // Железо (глубина 10-50, шанс 3%)
+                        else if (depth >= 10 && depth <= 50 && Math.random() < 0.03) {
                             block = 5;
                         }
-                        // Золото (глубина 20-35, шанс 2%)
-                        else if (depth >= 20 && depth <= 35 && Math.random() < 0.02) {
+                        // Золото (глубина 30-70, шанс 2%)
+                        else if (depth >= 30 && depth <= 70 && Math.random() < 0.02) {
                             block = 6;
                         }
-                        // Алмазы (глубина 30+, шанс 1%)
-                        else if (depth >= 30 && Math.random() < 0.01) {
+                        // Алмазы (глубина 50+, шанс 1%)
+                        else if (depth >= 50 && Math.random() < 0.01) {
                             block = 7;
                         }
                         
-                        // Лава на больших глубинах (глубина 60+, шанс 8%)
-                        if (depth >= 60 && Math.random() < 0.08) {
+                        // Лава на больших глубинах (глубина 80+, шанс 8%)
+                        if (depth >= 80 && Math.random() < 0.08) {
                             block = 11;
                         }
                     }
@@ -2507,6 +3788,12 @@
             
             // Генерация песка возле воды
             generateSand();
+            
+            // Генерация лавовых озёр с обсидианом
+            generateLavaLakes();
+            
+            // Генерация заброшенных шахт
+            generateAbandonedMines();
         }
         
         function generateTrees(type) {
@@ -2622,6 +3909,128 @@
                 }
             }
         }
+        
+        // Генерация лавовых озёр с обсидианом
+        function generateLavaLakes() {
+            const width = worldData[0].length;
+            const height = worldData.length;
+            const groundLevel = 20;
+            
+            // Генерируем 5-10 лавовых озёр на глубине 80+
+            const lakeCount = 5 + Math.floor(Math.random() * 6);
+            
+            for (let i = 0; i < lakeCount; i++) {
+                const x = 10 + Math.floor(Math.random() * (width - 20));
+                const y = groundLevel + 80 + Math.floor(Math.random() * (height - groundLevel - 90));
+                const radius = 2 + Math.floor(Math.random() * 3); // Радиус 2-4 блока
+                
+                // Создаём лавовое озеро
+                for (let dy = -radius; dy <= radius; dy++) {
+                    for (let dx = -radius; dx <= radius; dx++) {
+                        const dist = Math.sqrt(dx * dx + dy * dy);
+                        if (dist <= radius) {
+                            const nx = x + dx;
+                            const ny = y + dy;
+                            
+                            if (ny >= 0 && ny < height && nx >= 0 && nx < width) {
+                                worldData[ny][nx] = 11; // Лава
+                            }
+                        }
+                    }
+                }
+                
+                // Спавним обсидиан рядом с лавой (2-4 блока)
+                const obsidianCount = 2 + Math.floor(Math.random() * 3);
+                for (let j = 0; j < obsidianCount; j++) {
+                    const angle = Math.random() * Math.PI * 2;
+                    const distance = radius + 1 + Math.floor(Math.random() * 2);
+                    const ox = x + Math.floor(Math.cos(angle) * distance);
+                    const oy = y + Math.floor(Math.sin(angle) * distance);
+                    
+                    if (oy >= 0 && oy < height && ox >= 0 && ox < width) {
+                        if (worldData[oy][ox] === 3) { // Только если это камень
+                            worldData[oy][ox] = 29; // Обсидиан
+                        }
+                    }
+                }
+            }
+        }
+        
+        // Генерация заброшенных шахт
+        function generateAbandonedMines() {
+            const width = worldData[0].length;
+            const height = worldData.length;
+            const groundLevel = 20;
+            
+            // Генерируем 2-4 заброшенные шахты на уровне алмазов (глубина 50+)
+            const mineCount = 2 + Math.floor(Math.random() * 3);
+            
+            for (let i = 0; i < mineCount; i++) {
+                const startX = 20 + Math.floor(Math.random() * (width - 40));
+                const startY = groundLevel + 50 + Math.floor(Math.random() * 30);
+                
+                // Создаём горизонтальный туннель длиной 10-20 блоков
+                const tunnelLength = 10 + Math.floor(Math.random() * 11);
+                
+                for (let x = startX; x < startX + tunnelLength && x < width; x++) {
+                    // Туннель высотой 3 блока
+                    for (let dy = 0; dy < 3; dy++) {
+                        const y = startY + dy;
+                        if (y >= 0 && y < height) {
+                            worldData[y][x] = 0; // Воздух
+                        }
+                    }
+                    
+                    // Пол из досок
+                    if (startY + 3 < height) {
+                        worldData[startY + 3][x] = 13; // Доски
+                    }
+                    
+                    // Опоры из дерева каждые 3 блока
+                    if (x % 3 === 0) {
+                        if (startY - 1 >= 0) worldData[startY - 1][x] = 8; // Дерево (потолок)
+                        worldData[startY][x] = 8; // Дерево (левая стойка)
+                        worldData[startY + 2][x] = 8; // Дерево (правая стойка)
+                    }
+                    
+                    // Факелы каждые 5 блоков
+                    if (x % 5 === 0 && startY + 1 < height) {
+                        worldData[startY + 1][x] = 28; // Факел на стене
+                    }
+                }
+                
+                // Размещаем 1-2 сундука с лутом
+                const chestCount = 1 + Math.floor(Math.random() * 2);
+                for (let j = 0; j < chestCount; j++) {
+                    const chestX = startX + 3 + Math.floor(Math.random() * (tunnelLength - 6));
+                    const chestY = startY + 2;
+                    
+                    if (chestY < height && chestX < width) {
+                        worldData[chestY][chestX] = 17; // Сундук
+                        
+                        // Заполняем сундук лутом
+                        const chestKey = `${chestX},${chestY}`;
+                        chestStorages[chestKey] = [];
+                        
+                        // Алмазы (2-4 шт)
+                        const diamondCount = 2 + Math.floor(Math.random() * 3);
+                        chestStorages[chestKey].push({ type: 'diamond', count: diamondCount });
+                        
+                        // Железные слитки (3-5 шт)
+                        const ironCount = 3 + Math.floor(Math.random() * 3);
+                        chestStorages[chestKey].push({ type: 'iron_ingot', count: ironCount });
+                        
+                        // Палки (5-10 шт)
+                        const stickCount = 5 + Math.floor(Math.random() * 6);
+                        chestStorages[chestKey].push({ type: 'stick', count: stickCount });
+                        
+                        // Доски (10-20 шт)
+                        const plankCount = 10 + Math.floor(Math.random() * 11);
+                        chestStorages[chestKey].push({ type: 'planks', count: plankCount });
+                    }
+                }
+            }
+        }
 
         function spawnPlayer() {
             player.x = (250 * TILE_SIZE); // Центр увеличенного мира
@@ -2629,12 +4038,232 @@
             player.vx = 0; player.vy = 0;
             cameraUpdate(true);
         }
+        
+        // --- ПОРТАЛ И АД ---
+        // Проверка и поджигание портала
+        function checkAndIgnitePortal(x, y) {
+            // Проверяем форму портала (рамка из обсидиана 4x5)
+            // Форма: вертикальная рамка, внутри 2x3 пустого пространства
+            
+            // Ищем левый нижний угол портала
+            let portalX = x;
+            let portalY = y;
+            
+            // Проверяем несколько возможных позиций для рамки портала
+            const portalPatterns = [
+                // Стандартная вертикальная рамка 4 высоты, 3 ширины (внутри 2x3)
+                { startX: 0, startY: 0 }
+            ];
+            
+            for (let pattern of portalPatterns) {
+                const px = x + pattern.startX;
+                const py = y + pattern.startY;
+                
+                // Проверяем рамку портала (4 блока в высоту, 3 в ширину)
+                let isValidPortal = true;
+                
+                // Проверяем нижнюю часть (3 блока обсидиана)
+                for (let dx = 0; dx < 3; dx++) {
+                    if (!isObsidian(px + dx, py)) {
+                        isValidPortal = false;
+                        break;
+                    }
+                }
+                
+                // Проверяем боковые стороны (2 блока высоты с каждой стороны)
+                if (isValidPortal) {
+                    for (let dy = 1; dy <= 2; dy++) {
+                        if (!isObsidian(px, py - dy) || !isObsidian(px + 2, py - dy)) {
+                            isValidPortal = false;
+                            break;
+                        }
+                    }
+                }
+                
+                // Проверяем верхнюю часть (3 блока обсидиана)
+                if (isValidPortal) {
+                    for (let dx = 0; dx < 3; dx++) {
+                        if (!isObsidian(px + dx, py - 3)) {
+                            isValidPortal = false;
+                            break;
+                        }
+                    }
+                }
+                
+                // Проверяем что внутри пусто (2x2)
+                if (isValidPortal) {
+                    for (let dy = 1; dy <= 2; dy++) {
+                        for (let dx = 1; dx <= 1; dx++) {
+                            if (worldData[py - dy][px + dx] !== 0) {
+                                isValidPortal = false;
+                                break;
+                            }
+                        }
+                        if (!isValidPortal) break;
+                    }
+                }
+                
+                // Если нашли валидный портал - поджигаем
+                if (isValidPortal) {
+                    // Заполняем внутреннюю часть блоками портала
+                    for (let dy = 1; dy <= 2; dy++) {
+                        worldData[py - dy][px + 1] = 31; // Портал
+                    }
+                    return true;
+                }
+            }
+            
+            return false;
+        }
+        
+        function isObsidian(x, y) {
+            if (y < 0 || y >= worldData.length || x < 0 || x >= worldData[0].length) {
+                return false;
+            }
+            return worldData[y][x] === 29;
+        }
+        
+        // Вход в портал
+        function enterPortal() {
+            teleportScreen = true;
+            teleportTimer = 4000; // 4 секунды
+            
+            if (currentDimension === 'overworld') {
+                teleportMessage = 'Вы переноситесь в ад';
+            } else {
+                teleportMessage = 'Возвращение в обычный мир';
+            }
+            
+            setTimeout(() => {
+                teleportToDimension();
+                teleportScreen = false;
+            }, 4000);
+        }
+        
+        // Телепортация между измерениями
+        function teleportToDimension() {
+            if (currentDimension === 'overworld') {
+                // Сохраняем позицию в обычном мире
+                overworldPlayerPos = { x: player.x, y: player.y };
+                
+                // Переключаемся в Ад
+                currentDimension = 'nether';
+                
+                // Генерируем мир Ада если ещё не создан
+                if (netherWorldData.length === 0) {
+                    generateNetherWorld();
+                }
+                
+                // Меняем данные мира
+                const tempWorld = worldData;
+                worldData = netherWorldData;
+                netherWorldData = tempWorld;
+                
+                // Телепортируем игрока
+                if (netherPlayerPos.x === 0 && netherPlayerPos.y === 0) {
+                    player.x = (250 * TILE_SIZE);
+                    player.y = 10 * TILE_SIZE;
+                } else {
+                    player.x = netherPlayerPos.x;
+                    player.y = netherPlayerPos.y;
+                }
+                
+                showNotification('Добро пожаловать в Ад!', 'warning');
+            } else {
+                // Сохраняем позицию в Аду
+                netherPlayerPos = { x: player.x, y: player.y };
+                
+                // Возвращаемся в обычный мир
+                currentDimension = 'overworld';
+                
+                // Меняем данные мира
+                const tempWorld = worldData;
+                worldData = netherWorldData;
+                netherWorldData = tempWorld;
+                
+                // Телепортируем игрока
+                player.x = overworldPlayerPos.x;
+                player.y = overworldPlayerPos.y;
+                
+                showNotification('Вы вернулись в обычный мир', 'success');
+            }
+            
+            player.vx = 0;
+            player.vy = 0;
+            cameraUpdate(true);
+        }
+        
+        // Генерация мира Ада
+        function generateNetherWorld() {
+            netherWorldData = [];
+            const width = 500;
+            const height = 200;
+            
+            for (let y = 0; y < height; y++) {
+                netherWorldData[y] = [];
+                for (let x = 0; x < width; x++) {
+                    let block = 0;
+                    let groundLevel = 20 + Math.floor(Math.sin(x * 0.15) * 8 + Math.sin(x * 0.4) * 4);
+                    
+                    if (y === groundLevel) block = 32; // Незерак на поверхности
+                    else if (y > groundLevel) {
+                        block = 32; // Незерак везде
+                        
+                        // Золотая руда в Аду (шанс 4% везде)
+                        if (Math.random() < 0.04) {
+                            block = 6; // Золотая руда
+                        }
+                        
+                        // Лавовые озёра (шанс 12%)
+                        if (Math.random() < 0.12) {
+                            block = 11; // Лава
+                        }
+                    }
+                    
+                    netherWorldData[y][x] = block;
+                }
+            }
+            
+            // Генерируем большие лавовые озёра
+            generateNetherLavaLakes();
+        }
+        
+        // Генерация лавовых озёр в Аду
+        function generateNetherLavaLakes() {
+            const width = netherWorldData[0].length;
+            const height = netherWorldData.length;
+            
+            // Генерируем 15-25 лавовых озёр
+            const lakeCount = 15 + Math.floor(Math.random() * 11);
+            
+            for (let i = 0; i < lakeCount; i++) {
+                const x = 10 + Math.floor(Math.random() * (width - 20));
+                const y = 10 + Math.floor(Math.random() * (height - 20));
+                const radius = 3 + Math.floor(Math.random() * 5); // Радиус 3-7 блоков
+                
+                // Создаём лавовое озеро
+                for (let dy = -radius; dy <= radius; dy++) {
+                    for (let dx = -radius; dx <= radius; dx++) {
+                        const dist = Math.sqrt(dx * dx + dy * dy);
+                        if (dist <= radius) {
+                            const nx = x + dx;
+                            const ny = y + dy;
+                            
+                            if (ny >= 0 && ny < height && nx >= 0 && nx < width) {
+                                netherWorldData[ny][nx] = 11; // Лава
+                            }
+                        }
+                    }
+                }
+            }
+        }
 
         // --- Игровой Цикл ---
         function gameLoop(ts) {
-            if (!isRunning) return;
-            update(ts);
-            draw();
+            if (isRunning) {
+                update(ts);
+                draw();
+            }
             gameLoopId = requestAnimationFrame(gameLoop);
         }
 
@@ -2662,9 +4291,15 @@
             // Обновление индикатора часов
             updateClockDisplay();
             
+            // Скорость игрока зависит от голода
+            let currentSpeed = PLAYER_SPEED;
+            if (player.hunger < 30) {
+                currentSpeed = PLAYER_SPEED * 0.5; // Скорость падает на 50% при голоде < 30
+            }
+            
             player.vx = 0;
-            if (keys['KeyA'] || keys['ArrowLeft']) { player.vx = -PLAYER_SPEED; player.dir = -1; }
-            if (keys['KeyD'] || keys['ArrowRight']) { player.vx = PLAYER_SPEED; player.dir = 1; }
+            if (keys['KeyA'] || keys['ArrowLeft']) { player.vx = -currentSpeed; player.dir = -1; }
+            if (keys['KeyD'] || keys['ArrowRight']) { player.vx = currentSpeed; player.dir = 1; }
 
             if ((keys['Space'] || keys['KeyW'] || keys['ArrowUp']) && player.onGround) {
                 player.vy = JUMP_FORCE;
@@ -2682,8 +4317,17 @@
             // Обновление выпадающих предметов
             updateDroppedItems();
             
+            // Обновление распадающейся листвы
+            updateDecayingLeaves(16);
+            
+            // Обновление роста пшеницы
+            updateGrowingCrops(16);
+            
             // Обновление печи
             updateFurnace();
+            
+            // Обновление достижения исследователя
+            updateExplorerAchievement();
             
             // Спавн мобов (животные днем, зомби ночью или во время дождя)
             mobSpawnTimer += 16;
@@ -2768,6 +4412,11 @@
                 player.vx = 0;
             }
 
+            // Отслеживаем высоту падения
+            if (!player.onGround && player.vy > 0) {
+                player.fallDistance += player.vy;
+            }
+
             player.y += player.vy;
             player.onGround = false;
             let overlapY = checkWorldCollision(player.x, player.y);
@@ -2775,6 +4424,19 @@
                 if (player.vy > 0) {
                     player.y = overlapY.tileY * TILE_SIZE - PLAYER_HEIGHT;
                     player.onGround = true;
+                    
+                    // Урон от падения (4 блока = 128 пикселей)
+                    const fallBlocks = player.fallDistance / TILE_SIZE;
+                    if (fallBlocks >= 4) {
+                        const fallDamage = 30;
+                        player.hp -= fallDamage;
+                        if (player.hp < 0) player.hp = 0;
+                        updateHud();
+                        showNotification(`Урон от падения: -${fallDamage} HP`, 'error');
+                    }
+                    
+                    // Сбрасываем счетчик падения
+                    player.fallDistance = 0;
                     
                     // Звук приземления
                     if (!wasOnGround && player.vy > 5) {
@@ -2807,15 +4469,16 @@
             if (tileY < 0 || tileY >= worldData.length || tileX < 0 || tileX >= worldData[0].length) return;
             
             const blockType = worldData[tileY][tileX];
+            const isRaining = weather.type === 'rain';
             let soundType = null;
             
             // Определяем тип звука по блоку
             switch(blockType) {
                 case 1: // Трава
-                    soundType = 'step_grass';
+                    soundType = isRaining ? 'step_wet_grass' : 'step_grass';
                     break;
                 case 2: // Земля
-                    soundType = 'step_dirt';
+                    soundType = isRaining ? 'step_wet_grass' : 'step_dirt';
                     break;
                 case 3: // Камень
                 case 4: // Угольная руда
@@ -2826,9 +4489,14 @@
                     break;
                 case 8: // Дерево
                 case 9: // Листва
+                    soundType = 'step_grass'; // Используем звук травы для дерева/листвы
+                    break;
                 case 12: // Верстак
                 case 13: // Доски
-                    soundType = 'step_grass'; // Используем звук травы для дерева
+                case 17: // Сундук
+                case 18: // Лестница
+                case 19: // Забор
+                    soundType = 'step_planks'; // Звук досок для деревянных блоков
                     break;
             }
             
@@ -2841,6 +4509,61 @@
                 randomSound.currentTime = 0;
                 randomSound.play().catch(e => console.log('Sound play failed:', e));
             }
+        }
+
+        function playMiningSound(blockType) {
+            let soundType = null;
+            
+            // Определяем тип звука по блоку
+            switch(blockType) {
+                case 1: // Трава
+                case 2: // Земля
+                case 9: // Листва
+                case 20: // Песок
+                case 21: // Шерсть
+                    soundType = 'knock_grass';
+                    break;
+                case 3: // Камень
+                case 4: // Угольная руда
+                case 5: // Железная руда
+                case 6: // Золотая руда
+                case 7: // Алмазная руда
+                case 15: // Угольный блок
+                case 16: // Печь
+                case 14: // Стекло
+                    soundType = 'knock_stone';
+                    break;
+                case 8: // Дерево
+                case 12: // Верстак
+                case 13: // Доски
+                case 17: // Сундук
+                case 18: // Лестница
+                case 19: // Забор
+                case 22: // Кровать
+                case 23: // Кровать
+                    soundType = 'knock_planks';
+                    break;
+            }
+            
+            if (soundType && sounds[soundType]) {
+                const sound = sounds[soundType];
+                
+                // Если это массив звуков, выбираем случайный
+                if (Array.isArray(sound)) {
+                    const randomSound = sound[Math.floor(Math.random() * sound.length)];
+                    randomSound.currentTime = 0;
+                    randomSound.play().catch(e => console.log('Sound play failed:', e));
+                } else {
+                    // Если это один звук
+                    sound.currentTime = 0;
+                    sound.play().catch(e => console.log('Sound play failed:', e));
+                }
+            }
+        }
+
+        function playPlaceSound(blockType) {
+            // Используем те же звуки что и для добычи
+            playMiningSound(blockType);
         }
 
         function checkWorldCollision(px, py) {
@@ -2956,9 +4679,57 @@
                 return 0.5;
             }
         }
+        
+        // Затемнение в зависимости от глубины
+        function getDepthDarkness() {
+            const playerDepth = player.y / TILE_SIZE;
+            const surfaceLevel = 20; // Уровень поверхности
+            
+            if (playerDepth <= surfaceLevel) {
+                return 0; // На поверхности светло
+            }
+            
+            const depth = playerDepth - surfaceLevel;
+            
+            // Постепенное затемнение: начинается с глубины 10 блоков
+            if (depth < 10) {
+                return 0;
+            } else if (depth < 30) {
+                // Легкое затемнение (глубина 10-30)
+                return (depth - 10) / 20 * 0.3; // 0 -> 0.3
+            } else if (depth < 60) {
+                // Среднее затемнение (глубина 30-60)
+                return 0.3 + (depth - 30) / 30 * 0.3; // 0.3 -> 0.6
+            } else {
+                // Сильное затемнение (глубина 60+)
+                return Math.min(0.85, 0.6 + (depth - 60) / 40 * 0.25); // 0.6 -> 0.85 (максимум)
+            }
+        }
 
         function drawSky() {
-            if (isNightTime()) {
+            // В Аду - красное небо
+            if (currentDimension === 'nether') {
+                const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
+                gradient.addColorStop(0, '#8B0000'); // Темно-красный сверху
+                gradient.addColorStop(0.5, '#B22222'); // Красный в середине
+                gradient.addColorStop(1, '#DC143C'); // Ярко-красный снизу
+                ctx.fillStyle = gradient;
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                return;
+            }
+            
+            const playerDepth = player.y / TILE_SIZE;
+            const surfaceLevel = 20;
+            
+            // Если игрок под землей, небо темнеет
+            if (playerDepth > surfaceLevel + 5) {
+                // Темное подземное небо
+                const depthFactor = Math.min(1, (playerDepth - surfaceLevel - 5) / 30);
+                const r = Math.floor(135 * (1 - depthFactor) + 20 * depthFactor);
+                const g = Math.floor(206 * (1 - depthFactor) + 20 * depthFactor);
+                const b = Math.floor(235 * (1 - depthFactor) + 30 * depthFactor);
+                ctx.fillStyle = `rgb(${r}, ${g}, ${b})`;
+            } else if (isNightTime()) {
                 // Ночное небо
                 const darkness = getNightDarkness();
                 const nightR = Math.floor(10 + (135 - 10) * (1 - darkness * 2));
@@ -2971,8 +4742,10 @@
             }
             ctx.fillRect(0, 0, canvas.width, canvas.height);
             
-            // Рисуем солнце или луну
-            drawCelestialBodies();
+            // Рисуем солнце или луну (только на поверхности и не в Аду)
+            if (playerDepth <= surfaceLevel + 5 && currentDimension === 'overworld') {
+                drawCelestialBodies();
+            }
         }
 
         function drawCelestialBodies() {
@@ -3067,7 +4840,7 @@
             for (let i = 0; i < 20; i++) {
                 clouds.push({
                     x: Math.random() * worldData[0].length * TILE_SIZE,
-                    y: 50 + Math.random() * 150, // Высота облаков
+                    y: 20 + Math.random() * 200, // Высота облаков (увеличена)
                     width: 60 + Math.random() * 80,
                     height: 30 + Math.random() * 20,
                     speed: 0.1 + Math.random() * 0.3
@@ -3108,9 +4881,12 @@
             // Проверяем нужно ли сменить погоду
             if (ts >= weather.nextWeatherCheck) {
                 if (weather.type === 'clear') {
-                    // Шанс начала дождя (20% каждые 2 минуты)
-                    if (Math.random() < 0.2) {
+                    // Шанс начала дождя (15%) или тумана (15%)
+                    const rand = Math.random();
+                    if (rand < 0.15) {
                         startRain();
+                    } else if (rand < 0.30) {
+                        startFog();
                     }
                     weather.nextWeatherCheck = ts + 120000; // Проверка каждые 2 минуты
                 }
@@ -3126,21 +4902,51 @@
                     return;
                 }
 
-                // Создаём новые капли дождя
-                for (let i = 0; i < 5; i++) {
-                    weather.raindrops.push({
-                        x: camera.x + Math.random() * canvas.width,
-                        y: camera.y - 10,
-                        speed: 8 + Math.random() * 4,
-                        length: 10 + Math.random() * 10
-                    });
+                // Создаём новые капли дождя (только если игрок близко к поверхности)
+                const playerDepth = player.y / TILE_SIZE;
+                const surfaceLevel = 20;
+                
+                // Дождь виден только если игрок не глубже 10 блоков под землей
+                if (playerDepth <= surfaceLevel + 10) {
+                    for (let i = 0; i < 5; i++) {
+                        weather.raindrops.push({
+                            x: camera.x + Math.random() * canvas.width,
+                            y: camera.y - 10,
+                            speed: 8 + Math.random() * 4,
+                            length: 10 + Math.random() * 10
+                        });
+                    }
                 }
 
-                // Обновляем капли
+                // Обновляем капли с проверкой коллизии с блоками
                 weather.raindrops = weather.raindrops.filter(drop => {
                     drop.y += drop.speed;
+                    
+                    // Проверяем коллизию с блоками
+                    const tileX = Math.floor(drop.x / TILE_SIZE);
+                    const tileY = Math.floor(drop.y / TILE_SIZE);
+                    
+                    if (tileY >= 0 && tileY < worldData.length && tileX >= 0 && tileX < worldData[0].length) {
+                        const block = worldData[tileY][tileX];
+                        // Если капля попала в твердый блок, удаляем её
+                        if (block > 0 && block !== 10 && block !== 11) { // Не воздух, не вода, не лава
+                            return false;
+                        }
+                    }
+                    
                     return drop.y < camera.y + canvas.height + 50;
                 });
+            }
+            
+            // Обновляем туман
+            if (weather.type === 'fog') {
+                weather.timer += 16;
+                
+                // Проверяем закончился ли туман
+                if (weather.timer >= weather.duration) {
+                    stopFog();
+                    return;
+                }
             }
         }
 
@@ -3162,9 +4968,29 @@
             sounds.rain.currentTime = 0;
             showNotification('Дождь закончился', 'info');
         }
+        
+        function startFog() {
+            weather.type = 'fog';
+            weather.duration = (240000 + Math.random() * 180000); // 4-7 минут
+            weather.timer = 0;
+            showNotification('Появился туман', 'info');
+        }
+        
+        function stopFog() {
+            weather.type = 'clear';
+            weather.nextWeatherCheck = performance.now() + 120000; // Следующая проверка через 2 минуты
+        }
 
         function drawRain() {
             if (weather.type !== 'rain') return;
+            
+            // Не рисуем дождь если игрок глубоко под землей
+            const playerDepth = player.y / TILE_SIZE;
+            const surfaceLevel = 20;
+            
+            if (playerDepth > surfaceLevel + 10) {
+                return; // Слишком глубоко, дождь не виден
+            }
 
             ctx.strokeStyle = 'rgba(174, 194, 224, 0.5)';
             ctx.lineWidth = 2;
@@ -3175,6 +5001,37 @@
                 ctx.lineTo(drop.x - camera.x, drop.y - camera.y + drop.length);
                 ctx.stroke();
             });
+        }
+        
+        function drawFog() {
+            if (weather.type !== 'fog') return;
+            
+            // Рисуем несколько слоев тумана для эффекта глубины
+            const fogLayers = 3;
+            for (let i = 0; i < fogLayers; i++) {
+                const opacity = 0.15 - (i * 0.03);
+                const offset = (performance.now() / 1000 + i * 100) % canvas.width;
+                
+                ctx.fillStyle = `rgba(200, 200, 210, ${opacity})`;
+                
+                // Рисуем волнистый туман
+                ctx.beginPath();
+                ctx.moveTo(-offset, 0);
+                
+                for (let x = -offset; x < canvas.width + 100; x += 50) {
+                    const y = Math.sin((x + offset) / 50) * 30 + canvas.height / 3 + i * 100;
+                    ctx.lineTo(x, y);
+                }
+                
+                ctx.lineTo(canvas.width, canvas.height);
+                ctx.lineTo(0, canvas.height);
+                ctx.closePath();
+                ctx.fill();
+            }
+            
+            // Общая дымка
+            ctx.fillStyle = 'rgba(180, 180, 190, 0.2)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
         }
 
         // --- ЭФФЕКТЫ ИГРОКА ---
@@ -3242,8 +5099,10 @@
             ctx.save();
             ctx.translate(-Math.round(camera.x), -Math.round(camera.y));
 
-            // Рисуем облака
-            drawClouds();
+            // Рисуем облака (только в обычном мире)
+            if (currentDimension === 'overworld') {
+                drawClouds();
+            }
             
             drawWorld();
             drawMiningProgress();
@@ -3253,13 +5112,38 @@
 
             ctx.restore();
             
-            // Рисуем дождь (поверх мира, но под затемнением)
-            drawRain();
+            // Рисуем дождь (поверх мира, но под затемнением, только в обычном мире)
+            if (currentDimension === 'overworld') {
+                drawRain();
+                
+                // Рисуем туман (поверх мира, но под затемнением)
+                drawFog();
+            }
             
-            // Затемнение ночью (поверх всего)
-            if (isNightTime()) {
+            // Затемнение ночью (поверх всего, только в обычном мире)
+            if (isNightTime() && currentDimension === 'overworld') {
                 ctx.fillStyle = `rgba(0, 0, 20, ${getNightDarkness()})`;
                 ctx.fillRect(0, 0, canvas.width, canvas.height);
+            }
+            
+            // Затемнение от глубины (поверх всего, включая ночь, только в обычном мире)
+            if (currentDimension === 'overworld') {
+                const depthDarkness = getDepthDarkness();
+                if (depthDarkness > 0) {
+                    ctx.fillStyle = `rgba(0, 0, 0, ${depthDarkness})`;
+                    ctx.fillRect(0, 0, canvas.width, canvas.height);
+                }
+            }
+            
+            // Экран телепортации
+            if (teleportScreen) {
+                ctx.fillStyle = 'rgba(0, 0, 0, 0.8)';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                
+                ctx.fillStyle = '#fff';
+                ctx.font = '48px Arial';
+                ctx.textAlign = 'center';
+                ctx.fillText(teleportMessage, canvas.width / 2, canvas.height / 2);
             }
         }
 
@@ -3560,6 +5444,135 @@
                             ctx.fillStyle = "#DC143C";
                             ctx.fillRect(bx + 2, by + 8, TILE_SIZE - 4, TILE_SIZE - 10);
                             break;
+                        case 24: // Грядка (вспаханная земля)
+                            ctx.fillStyle = "#5C4033"; // Темно-коричневая земля
+                            ctx.fillRect(bx, by, TILE_SIZE, TILE_SIZE);
+                            // Борозды
+                            ctx.fillStyle = "#3D2817";
+                            ctx.fillRect(bx + 2, by + 6, TILE_SIZE - 4, 2);
+                            ctx.fillRect(bx + 2, by + 14, TILE_SIZE - 4, 2);
+                            ctx.fillRect(bx + 2, by + 22, TILE_SIZE - 4, 2);
+                            break;
+                        case 25: // Пшеница стадия 1 (росток)
+                            // Грядка
+                            ctx.fillStyle = "#5C4033";
+                            ctx.fillRect(bx, by, TILE_SIZE, TILE_SIZE);
+                            ctx.fillStyle = "#3D2817";
+                            ctx.fillRect(bx + 2, by + 14, TILE_SIZE - 4, 2);
+                            // Маленький росток
+                            ctx.fillStyle = "#90EE90";
+                            ctx.fillRect(bx + 12, by + 20, 4, 8);
+                            ctx.fillRect(bx + 10, by + 24, 2, 4);
+                            ctx.fillRect(bx + 16, by + 24, 2, 4);
+                            break;
+                        case 26: // Пшеница стадия 2 (растет)
+                            // Грядка
+                            ctx.fillStyle = "#5C4033";
+                            ctx.fillRect(bx, by, TILE_SIZE, TILE_SIZE);
+                            // Средний росток
+                            ctx.fillStyle = "#7CFC00";
+                            ctx.fillRect(bx + 12, by + 12, 4, 16);
+                            ctx.fillRect(bx + 8, by + 16, 3, 12);
+                            ctx.fillRect(bx + 17, by + 16, 3, 12);
+                            ctx.fillRect(bx + 10, by + 20, 2, 8);
+                            ctx.fillRect(bx + 18, by + 20, 2, 8);
+                            break;
+                        case 27: // Пшеница стадия 3 (зрелая)
+                            // Грядка
+                            ctx.fillStyle = "#5C4033";
+                            ctx.fillRect(bx, by, TILE_SIZE, TILE_SIZE);
+                            // Зрелая пшеница
+                            ctx.fillStyle = "#FFD700"; // Золотистая
+                            ctx.fillRect(bx + 12, by + 4, 4, 24);
+                            ctx.fillRect(bx + 8, by + 8, 3, 20);
+                            ctx.fillRect(bx + 17, by + 8, 3, 20);
+                            ctx.fillRect(bx + 10, by + 12, 2, 16);
+                            ctx.fillRect(bx + 18, by + 12, 2, 16);
+                            // Колоски
+                            ctx.fillStyle = "#FFA500";
+                            ctx.fillRect(bx + 11, by + 6, 2, 2);
+                            ctx.fillRect(bx + 15, by + 6, 2, 2);
+                            ctx.fillRect(bx + 9, by + 10, 2, 2);
+                            ctx.fillRect(bx + 17, by + 10, 2, 2);
+                            break;
+                        case 28: // Факел
+                            // Палка
+                            ctx.fillStyle = "#8B4513";
+                            ctx.fillRect(bx + 14, by + 12, 4, 16);
+                            // Огонь
+                            ctx.fillStyle = "#FFA500";
+                            ctx.fillRect(bx + 12, by + 8, 8, 8);
+                            ctx.fillStyle = "#FFD700";
+                            ctx.fillRect(bx + 13, by + 9, 6, 6);
+                            ctx.fillStyle = "#FFFF00";
+                            ctx.fillRect(bx + 14, by + 10, 4, 4);
+                            break;
+                        case 29: // Обсидиан
+                            ctx.fillStyle = "#0A0A14"; // Очень темный фиолетово-черный
+                            ctx.fillRect(bx, by, TILE_SIZE, TILE_SIZE);
+                            // Текстура обсидиана (фиолетовые блики)
+                            ctx.fillStyle = "#1A0A28";
+                            ctx.fillRect(bx + 4, by + 4, 8, 8);
+                            ctx.fillRect(bx + 18, by + 10, 6, 6);
+                            ctx.fillRect(bx + 8, by + 20, 10, 6);
+                            // Яркие фиолетовые блики
+                            ctx.fillStyle = "#4B0082";
+                            ctx.fillRect(bx + 6, by + 6, 3, 3);
+                            ctx.fillRect(bx + 20, by + 12, 2, 2);
+                            ctx.fillRect(bx + 10, by + 22, 3, 2);
+                            break;
+                        case 30: // Гравий
+                            ctx.fillStyle = "#808080"; // Серый
+                            ctx.fillRect(bx, by, TILE_SIZE, TILE_SIZE);
+                            // Текстура гравия (камешки)
+                            ctx.fillStyle = "#696969";
+                            ctx.fillRect(bx + 4, by + 4, 6, 6);
+                            ctx.fillRect(bx + 18, by + 8, 8, 6);
+                            ctx.fillRect(bx + 8, by + 20, 6, 6);
+                            ctx.fillStyle = "#A9A9A9";
+                            ctx.fillRect(bx + 14, by + 6, 4, 4);
+                            ctx.fillRect(bx + 6, by + 14, 5, 5);
+                            ctx.fillRect(bx + 22, by + 22, 4, 4);
+                            break;
+                        case 31: // Портал (фиолетовый анимированный)
+                            // Анимация портала
+                            const portalTime = Date.now() / 100;
+                            const portalAlpha = 0.7 + Math.sin(portalTime) * 0.3;
+                            
+                            // Основной фиолетовый цвет
+                            ctx.fillStyle = `rgba(138, 43, 226, ${portalAlpha})`;
+                            ctx.fillRect(bx, by, TILE_SIZE, TILE_SIZE);
+                            
+                            // Яркие фиолетовые полосы (анимация)
+                            ctx.fillStyle = `rgba(186, 85, 211, ${portalAlpha * 0.8})`;
+                            const offset = (portalTime % 32);
+                            ctx.fillRect(bx, by + offset, TILE_SIZE, 4);
+                            ctx.fillRect(bx, by + offset - 16, TILE_SIZE, 4);
+                            ctx.fillRect(bx, by + offset + 16, TILE_SIZE, 4);
+                            
+                            // Светящиеся частицы
+                            ctx.fillStyle = `rgba(255, 255, 255, ${portalAlpha * 0.6})`;
+                            ctx.fillRect(bx + 8, by + 8, 2, 2);
+                            ctx.fillRect(bx + 20, by + 16, 2, 2);
+                            ctx.fillRect(bx + 12, by + 24, 2, 2);
+                            break;
+                        case 32: // Незерак (красно-коричневый блок Ада)
+                            ctx.fillStyle = "#8B0000"; // Темно-красный
+                            ctx.fillRect(bx, by, TILE_SIZE, TILE_SIZE);
+                            // Текстура незерака
+                            ctx.fillStyle = "#A52A2A";
+                            ctx.fillRect(bx + 4, by + 4, 8, 8);
+                            ctx.fillRect(bx + 18, by + 10, 6, 6);
+                            ctx.fillRect(bx + 8, by + 20, 10, 6);
+                            ctx.fillStyle = "#CD5C5C";
+                            ctx.fillRect(bx + 6, by + 6, 4, 4);
+                            ctx.fillRect(bx + 20, by + 12, 3, 3);
+                            ctx.fillRect(bx + 10, by + 22, 4, 3);
+                            // Темные пятна
+                            ctx.fillStyle = "#5C0000";
+                            ctx.fillRect(bx + 14, by + 8, 3, 3);
+                            ctx.fillRect(bx + 24, by + 18, 3, 3);
+                            break;
                     }
 
                     // Обводка
@@ -3568,6 +5581,46 @@
                     ctx.fillRect(bx + TILE_SIZE - 2, by, 2, TILE_SIZE);
                 }
             }
+            
+            // Рисуем освещение от факелов
+            drawLighting();
+        }
+        
+        // Система освещения от факелов
+        function drawLighting() {
+            const startCol = Math.max(0, Math.floor(camera.x / TILE_SIZE));
+            const endCol = Math.min(worldData[0].length, Math.ceil((camera.x + canvas.width) / TILE_SIZE));
+            const startRow = Math.max(0, Math.floor(camera.y / TILE_SIZE));
+            const endRow = Math.min(worldData.length, Math.ceil((camera.y + canvas.height) / TILE_SIZE));
+            
+            // Собираем все источники света (факелы и игрок с факелом в руке)
+            const lightSources = [];
+            
+            // Факелы в мире
+            for (let y = startRow; y < endRow; y++) {
+                for (let x = startCol; x < endCol; x++) {
+                    if (worldData[y][x] === 28) { // Факел
+                        lightSources.push({ x: x * TILE_SIZE + TILE_SIZE / 2, y: y * TILE_SIZE + TILE_SIZE / 2 });
+                    }
+                }
+            }
+            
+            // Факел в руках игрока
+            const currentItem = hotbarItems[activeSlot];
+            if (currentItem.type === 'torch') {
+                lightSources.push({ x: player.x + PLAYER_WIDTH / 2, y: player.y + PLAYER_HEIGHT / 2 });
+            }
+            
+            // Рисуем свечение от каждого источника
+            lightSources.forEach(light => {
+                const gradient = ctx.createRadialGradient(light.x, light.y, 0, light.x, light.y, TILE_SIZE * 4);
+                gradient.addColorStop(0, 'rgba(255, 200, 100, 0.3)');
+                gradient.addColorStop(0.5, 'rgba(255, 150, 50, 0.15)');
+                gradient.addColorStop(1, 'rgba(255, 100, 0, 0)');
+                
+                ctx.fillStyle = gradient;
+                ctx.fillRect(light.x - TILE_SIZE * 4, light.y - TILE_SIZE * 4, TILE_SIZE * 8, TILE_SIZE * 8);
+            });
         }
 
         function drawPlayer() {
@@ -3790,6 +5843,27 @@
                     const wallBlock = worldData[wallTileY][wallTileX];
                     if (wallBlock > 0 && !liquidBlocks.includes(wallBlock)) {
                         mob.wanderDirection *= -1; // Разворачиваемся
+                    }
+                }
+                
+                // Зомби получают урон на солнце (день), но не во время дождя
+                if (mob.type === 'zombie' && dayNightCycle < 0.25 && weather.type !== 'rain') { // День (0-0.25) и не дождь
+                    // Проверяем что зомби на открытом воздухе (нет блоков над ним)
+                    const mobTileX = Math.floor((mob.x + mob.size / 2) / TILE_SIZE);
+                    const mobTileY = Math.floor(mob.y / TILE_SIZE);
+                    let hasRoof = false;
+                    
+                    // Проверяем блоки над зомби
+                    for (let checkY = mobTileY - 1; checkY >= 0; checkY--) {
+                        if (worldData[checkY] && worldData[checkY][mobTileX] && worldData[checkY][mobTileX] > 0) {
+                            hasRoof = true;
+                            break;
+                        }
+                    }
+                    
+                    // Если нет крыши, зомби горит на солнце
+                    if (!hasRoof) {
+                        mob.hp -= 0.5; // Урон от солнца
                     }
                 }
                 
@@ -4105,7 +6179,9 @@
             
             if (inventoryOpen || workbenchOpen || furnaceOpen || chestOpen) return; // Не едим в инвентаре
             
-            // Проверяем клик по блокам (верстак, печь, сундук)
+            const currentItem = hotbarItems[activeSlot];
+            
+            // Проверяем клик по блокам (верстак, печь, сундук) или использование мотыги/ведра/зажигалки
             const worldX = mouse.x + camera.x;
             const worldY = mouse.y + camera.y;
             const tileX = Math.floor(worldX / TILE_SIZE);
@@ -4119,6 +6195,100 @@
                 if (dist < REACH_DISTANCE) {
                     const blockType = worldData[tileY][tileX];
                     
+                    // Использование зажигалки - поджигание портала
+                    if (currentItem.type === 'lighter' && blockType === 29) { // Обсидиан
+                        if (checkAndIgnitePortal(tileX, tileY)) {
+                            showNotification('Портал активирован!', 'success');
+                        }
+                        return;
+                    }
+                    
+                    // Использование мотыги - вспахивание земли/травы
+                    if (currentItem.type && (currentItem.type === 'hoe' || currentItem.type === 'stone_hoe' || currentItem.type === 'iron_hoe' || currentItem.type === 'diamond_hoe')) {
+                        if (blockType === 1 || blockType === 2) { // Трава или земля
+                            worldData[tileY][tileX] = 24; // Превращаем в грядку
+                            
+                            // Уменьшаем прочность мотыги
+                            if (currentItem.durability === null) {
+                                currentItem.durability = toolDurability[currentItem.type];
+                            }
+                            currentItem.durability -= 1;
+                            
+                            if (currentItem.durability <= 0) {
+                                currentItem.type = null;
+                                currentItem.count = 0;
+                                currentItem.durability = null;
+                                showNotification("Ваша мотыга сломалась!", "warning");
+                            }
+                            updateHotbarDisplay();
+                            return;
+                        }
+                    }
+                    
+                    // Посадка семян пшеницы на грядку
+                    if (currentItem.type === 'wheat_seeds' && blockType === 24) {
+                        worldData[tileY][tileX] = 25; // Пшеница стадия 1
+                        growingCrops.push({ x: tileX, y: tileY, stage: 0, timer: 0 });
+                        
+                        currentItem.count--;
+                        if (currentItem.count <= 0) {
+                            currentItem.type = null;
+                            currentItem.count = 0;
+                        }
+                        updateHotbarDisplay();
+                        return;
+                    }
+                    
+                    // Сбор зрелой пшеницы (стадия 3)
+                    if (blockType === 27) { // Зрелая пшеница
+                        worldData[tileY][tileX] = 24; // Возвращаем грядку
+                        
+                        // Удаляем из списка растущих культур
+                        for (let i = growingCrops.length - 1; i >= 0; i--) {
+                            if (growingCrops[i].x === tileX && growingCrops[i].y === tileY) {
+                                growingCrops.splice(i, 1);
+                                break;
+                            }
+                        }
+                        
+                        // Выпадает пшеница (1-2 шт)
+                        const wheatCount = 1 + Math.floor(Math.random() * 2);
+                        for (let i = 0; i < wheatCount; i++) {
+                            spawnDroppedItem(
+                                tileX * TILE_SIZE + TILE_SIZE / 2 + (Math.random() - 0.5) * 10,
+                                tileY * TILE_SIZE + TILE_SIZE / 2,
+                                'wheat'
+                            );
+                        }
+                        
+                        // Выпадают семена (1-2 шт)
+                        const seedsCount = 1 + Math.floor(Math.random() * 2);
+                        for (let i = 0; i < seedsCount; i++) {
+                            spawnDroppedItem(
+                                tileX * TILE_SIZE + TILE_SIZE / 2 + (Math.random() - 0.5) * 10,
+                                tileY * TILE_SIZE + TILE_SIZE / 2,
+                                'wheat_seeds'
+                            );
+                        }
+                        
+                        showNotification('Собрали пшеницу!', 'success');
+                        return;
+                    }
+                    
+                    // Набор воды в ведро
+                    if (currentItem.type === 'bucket' && (blockType === 10 || blockType === 11)) { // Вода
+                        currentItem.type = 'water_bucket';
+                        updateHotbarDisplay();
+                        showNotification('Набрали воду в ведро', 'info');
+                        return;
+                    }
+                    
+                    // Вход в портал
+                    if (blockType === 31) { // Портал
+                        enterPortal();
+                        return;
+                    }
+                    
                     if (blockType === 12) { // Верстак
                         openWorkbench();
                         return;
@@ -4131,8 +6301,6 @@
                     }
                 }
             }
-            
-            const currentItem = hotbarItems[activeSlot];
             
             // Использование кровати
             if (currentItem.type === 'bed') {
