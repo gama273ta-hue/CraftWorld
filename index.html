@@ -978,6 +978,15 @@
                         <span class="craft-arrow">→</span>
                         <div class="inv-slot" id="craft-result-slot"></div>
                     </div>
+                    
+                    <!-- Слоты брони -->
+                    <div style="text-align: center; color: #aaa; margin-top: 15px; margin-bottom: 5px;">Броня</div>
+                    <div style="display: flex; flex-direction: column; gap: 5px;">
+                        <div class="inv-slot armor-slot" data-armor-index="0" title="Шлем"></div>
+                        <div class="inv-slot armor-slot" data-armor-index="1" title="Нагрудник"></div>
+                        <div class="inv-slot armor-slot" data-armor-index="2" title="Поножи"></div>
+                        <div class="inv-slot armor-slot" data-armor-index="3" title="Ботинки"></div>
+                    </div>
                 </div>
 
                 <div>
@@ -1161,6 +1170,9 @@
         // Основной инвентарь (27 слотов)
         let inventoryItems = Array(27).fill(null).map(() => ({ type: null, count: 0, durability: null }));
         
+        // Слоты брони (4 слота: шлем, нагрудник, поножи, ботинки)
+        let armorSlots = Array(4).fill(null).map(() => ({ type: null, count: 0, durability: null }));
+        
         // Крафт сетка (4 слота)
         let craftingGrid = Array(4).fill(null).map(() => ({ type: null, count: 0, durability: null }));
         
@@ -1198,7 +1210,12 @@
             'stone_pickaxe', 'stone_axe', 'stone_shovel', 'stone_sword', 'stone_hoe',
             'iron_pickaxe', 'iron_axe', 'iron_shovel', 'iron_sword', 'iron_hoe',
             'diamond_pickaxe', 'diamond_axe', 'diamond_shovel', 'diamond_sword', 'diamond_hoe',
-            'shears', 'bucket', 'water_bucket', 'golden_apple', 'bed', 'lighter'
+            'shears', 'bucket', 'water_bucket', 'golden_apple', 'bed', 'lighter', 'bow',
+            // Броня
+            'leather_helmet', 'leather_chestplate', 'leather_leggings', 'leather_boots',
+            'wooden_helmet', 'wooden_chestplate', 'wooden_leggings', 'wooden_boots',
+            'iron_helmet', 'iron_chestplate', 'iron_leggings', 'iron_boots',
+            'diamond_helmet', 'diamond_chestplate', 'diamond_leggings', 'diamond_boots'
         ];
         
         // Прочность инструментов
@@ -1223,7 +1240,53 @@
             'diamond_shovel': 340,
             'diamond_sword': 323,
             'diamond_hoe': 340,
-            'shears': 100
+            'shears': 100,
+            'bow': 200,
+            // Броня
+            'leather_helmet': 12,
+            'leather_chestplate': 17,
+            'leather_leggings': 15,
+            'leather_boots': 13,
+            'wooden_helmet': 34,
+            'wooden_chestplate': 45,
+            'wooden_leggings': 42,
+            'wooden_boots': 32,
+            'iron_helmet': 65,
+            'iron_chestplate': 76,
+            'iron_leggings': 55,
+            'iron_boots': 43,
+            'diamond_helmet': 273,
+            'diamond_chestplate': 304,
+            'diamond_leggings': 273,
+            'diamond_boots': 202
+        };
+        
+        // Защита брони (в процентах)
+        const armorProtection = {
+            'leather_helmet': 0.12,
+            'leather_chestplate': 0.20,
+            'leather_leggings': 0.15,
+            'leather_boots': 0.05,
+            'wooden_helmet': 0.16,
+            'wooden_chestplate': 0.25,
+            'wooden_leggings': 0.18,
+            'wooden_boots': 0.16,
+            'iron_helmet': 0.43,
+            'iron_chestplate': 0.54,
+            'iron_leggings': 0.45,
+            'iron_boots': 0.37,
+            'diamond_helmet': 0.68,
+            'diamond_chestplate': 0.87,
+            'diamond_leggings': 0.67,
+            'diamond_boots': 0.56
+        };
+        
+        // Типы брони по слотам
+        const armorTypes = {
+            0: ['leather_helmet', 'wooden_helmet', 'iron_helmet', 'diamond_helmet'], // Шлем
+            1: ['leather_chestplate', 'wooden_chestplate', 'iron_chestplate', 'diamond_chestplate'], // Нагрудник
+            2: ['leather_leggings', 'wooden_leggings', 'iron_leggings', 'diamond_leggings'], // Поножи
+            3: ['leather_boots', 'wooden_boots', 'iron_boots', 'diamond_boots'] // Ботинки
         };
         
         // Урон оружия
@@ -1236,7 +1299,8 @@
             'axe': 5,
             'stone_axe': 6,
             'iron_axe': 7,
-            'diamond_axe': 8
+            'diamond_axe': 8,
+            'bow': 6
         };
         
         // Скорость добычи - количество кликов для разных инструментов
@@ -1406,7 +1470,9 @@
             'wool': 21,
             'bed': 22, // Кровать (занимает 2 блока: 22 и 23)
             'torch': 28, // Факел
+            'obsidian': 29, // Обсидиан
             'gravel': 30, // Гравий
+            'nether_portal': 31, // Портал
             'netherrack': 32 // Незерак
         };
 
@@ -1462,8 +1528,241 @@
         let mobSpawnTimer = 0;
         let autoSaveTimer = 0;
         
+        // Система партиклов
+        let particles = [];
+        
+        // Система стрел (projectiles)
+        let arrows = [];
+        
+        // Создание партиклов при прыжке в воду
+        function createWaterSplashParticles(x, y) {
+            const particleCount = 15;
+            for (let i = 0; i < particleCount; i++) {
+                particles.push({
+                    x: x,
+                    y: y,
+                    vx: (Math.random() - 0.5) * 8,
+                    vy: (Math.random() - 0.5) * 8 - 2,
+                    life: 1.0,
+                    maxLife: 1.0,
+                    color: `rgba(100, 150, 255, ${0.8})`,
+                    size: 3 + Math.random() * 3,
+                    gravity: 0.3
+                });
+            }
+        }
+        
+        // Создание партиклов при прыжке в лаву
+        function createLavaSplashParticles(x, y) {
+            const particleCount = 20;
+            for (let i = 0; i < particleCount; i++) {
+                const hue = Math.random() < 0.5 ? 'rgba(255, 100, 0' : 'rgba(255, 150, 0';
+                particles.push({
+                    x: x,
+                    y: y,
+                    vx: (Math.random() - 0.5) * 10,
+                    vy: (Math.random() - 0.5) * 10 - 3,
+                    life: 1.0,
+                    maxLife: 1.0,
+                    color: `${hue}, ${0.9})`,
+                    size: 4 + Math.random() * 4,
+                    gravity: 0.2
+                });
+            }
+        }
+        
+        // Создание партиклов эффекта голода
+        function createHungerEffectParticle(x, y) {
+            particles.push({
+                x: x + (Math.random() - 0.5) * PLAYER_WIDTH,
+                y: y + Math.random() * PLAYER_HEIGHT,
+                vx: (Math.random() - 0.5) * 0.5,
+                vy: -0.5 - Math.random() * 0.5,
+                life: 2.0,
+                maxLife: 2.0,
+                color: 'rgba(100, 120, 50, 0.8)',
+                size: 3 + Math.random() * 2,
+                gravity: -0.05
+            });
+        }
+        
+        // Обновление партиклов
+        function updateParticles(deltaTime) {
+            for (let i = particles.length - 1; i >= 0; i--) {
+                const p = particles[i];
+                
+                p.x += p.vx;
+                p.y += p.vy;
+                p.vy += p.gravity;
+                p.life -= deltaTime / 1000;
+                
+                if (p.life <= 0) {
+                    particles.splice(i, 1);
+                }
+            }
+        }
+        
+        // Отрисовка партиклов
+        function drawParticles() {
+            particles.forEach(p => {
+                const alpha = p.life / p.maxLife;
+                const screenX = p.x - camera.x;
+                const screenY = p.y - camera.y;
+                
+                ctx.globalAlpha = alpha;
+                ctx.fillStyle = p.color;
+                ctx.beginPath();
+                ctx.arc(screenX, screenY, p.size, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.globalAlpha = 1.0;
+            });
+        }
+        
+        // Стрельба из лука
+        function shootArrow() {
+            const pCenterX = player.x + PLAYER_WIDTH / 2;
+            const pCenterY = player.y + PLAYER_HEIGHT / 2;
+            
+            // Направление к курсору
+            const worldX = mouse.x + camera.x;
+            const worldY = mouse.y + camera.y;
+            
+            const dx = worldX - pCenterX;
+            const dy = worldY - pCenterY;
+            const dist = Math.hypot(dx, dy);
+            
+            // Нормализуем направление
+            const dirX = dx / dist;
+            const dirY = dy / dist;
+            
+            // Скорость стрелы
+            const arrowSpeed = 15;
+            
+            // Создаем стрелу
+            arrows.push({
+                x: pCenterX,
+                y: pCenterY,
+                vx: dirX * arrowSpeed,
+                vy: dirY * arrowSpeed,
+                life: 5.0, // 5 секунд полета
+                stuck: false,
+                stuckTimer: 0
+            });
+        }
+        
+        // Обновление стрел
+        function updateArrows(deltaTime) {
+            for (let i = arrows.length - 1; i >= 0; i--) {
+                const arrow = arrows[i];
+                
+                if (arrow.stuck) {
+                    // Стрела застряла в блоке
+                    arrow.stuckTimer += deltaTime / 1000;
+                    if (arrow.stuckTimer >= 2.0) {
+                        arrows.splice(i, 1);
+                    }
+                    continue;
+                }
+                
+                // Движение стрелы
+                arrow.x += arrow.vx;
+                arrow.y += arrow.vy;
+                arrow.vy += 0.3; // Гравитация
+                
+                arrow.life -= deltaTime / 1000;
+                
+                // Проверка столкновения с блоками
+                const tileX = Math.floor(arrow.x / TILE_SIZE);
+                const tileY = Math.floor(arrow.y / TILE_SIZE);
+                
+                if (tileY >= 0 && tileY < worldData.length && tileX >= 0 && tileX < worldData[0].length) {
+                    const blockType = worldData[tileY][tileX];
+                    
+                    // Если стрела попала в твердый блок
+                    if (blockType !== 0 && !liquidBlocks.includes(blockType)) {
+                        arrow.stuck = true;
+                        arrow.stuckTimer = 0;
+                        continue;
+                    }
+                }
+                
+                // Проверка столкновения с мобами
+                for (let j = mobs.length - 1; j >= 0; j--) {
+                    const mob = mobs[j];
+                    const dx = arrow.x - (mob.x + mob.size / 2);
+                    const dy = arrow.y - (mob.y + mob.size / 2);
+                    const dist = Math.hypot(dx, dy);
+                    
+                    if (dist < mob.size / 2) {
+                        // Стрела попала в моба
+                        mob.hp -= weaponDamage['bow'];
+                        
+                        // Пугаем животных
+                        if (!mob.aggressive) {
+                            scareNearbyAnimals(mob.type, mob.x, mob.y);
+                        }
+                        
+                        // Отталкивание моба
+                        const pushDir = arrow.vx > 0 ? 1 : -1;
+                        mob.vx = pushDir * 6;
+                        mob.vy = -4;
+                        
+                        // Удаляем стрелу
+                        arrows.splice(i, 1);
+                        break;
+                    }
+                }
+                
+                // Удаляем стрелу если время вышло или вылетела за границы
+                if (arrow.life <= 0 || arrow.y > worldData.length * TILE_SIZE || arrow.x < 0 || arrow.x > worldData[0].length * TILE_SIZE) {
+                    arrows.splice(i, 1);
+                }
+            }
+        }
+        
+        // Отрисовка стрел
+        function drawArrows() {
+            arrows.forEach(arrow => {
+                const screenX = arrow.x - camera.x;
+                const screenY = arrow.y - camera.y;
+                
+                // Вычисляем угол стрелы
+                const angle = Math.atan2(arrow.vy, arrow.vx);
+                
+                ctx.save();
+                ctx.translate(screenX, screenY);
+                ctx.rotate(angle);
+                
+                // Рисуем стрелу
+                ctx.fillStyle = '#8B4513'; // Коричневый цвет древка
+                ctx.fillRect(-8, -1, 12, 2);
+                
+                // Наконечник
+                ctx.fillStyle = '#C0C0C0'; // Серый цвет наконечника
+                ctx.beginPath();
+                ctx.moveTo(4, 0);
+                ctx.lineTo(-2, -3);
+                ctx.lineTo(-2, 3);
+                ctx.closePath();
+                ctx.fill();
+                
+                // Оперение
+                ctx.fillStyle = '#FFFFFF';
+                ctx.fillRect(-8, -2, 3, 4);
+                
+                ctx.restore();
+            });
+        }
+        
+        let lastHungerParticleTime = 0;
+        let wasInWater = false;
+        let wasInLava = false;
+        
         // Система распада листвы
         let decayingLeaves = []; // Массив для листвы которая должна распасться { x, y, timer }
+        
+        // Система огня
+        let burningBlocks = []; // Массив горящих блоков { x, y, timer }
         
         // Система роста пшеницы
         let growingCrops = []; // Массив растущих культур { x, y, stage, timer }
@@ -1564,7 +1863,8 @@
 
         // Эффекты игрока
         let playerEffects = {
-            hunger: { active: false, endTime: 0 } // Эффект голода
+            hunger: { active: false, endTime: 0 }, // Эффект голода
+            burning: { active: false, endTime: 0 } // Эффект горения
         };
 
         // Звуковая система
@@ -1589,6 +1889,10 @@
                 new Audio('sounds/step_planks_2.WAV'),
                 new Audio('sounds/step_planks_3.WAV')
             ],
+            step_gravel: [
+                new Audio('sounds/step_grawel_1.mp3'),
+                new Audio('sounds/step_grawel_2.mp3')
+            ],
             step_wet_grass: [
                 new Audio('sounds/step_wet_grass_1.WAV'),
                 new Audio('sounds/step_wet_grass_2.WAV'),
@@ -1601,6 +1905,17 @@
                 new Audio('sounds/knock_planks_1.wav'),
                 new Audio('sounds/knock_planks_2.wav')
             ],
+            knock_dirt: [
+                new Audio('sounds/knock_dirt_1.mp3'),
+                new Audio('sounds/knock_dirt_2.mp3')
+            ],
+            knock_gravel: [
+                new Audio('sounds/knock_grawel_1.mp3'),
+                new Audio('sounds/knock_grawel_2.mp3')
+            ],
+            // Окружающие звуки
+            ambient_water: new Audio('sounds/water.mp3'),
+            ambient_lava: new Audio('sounds/lava.mp3'),
             pickup: new Audio('sounds/pick up.mp3'),
             rain: new Audio('sounds/rain.mp3')
         };
@@ -1619,9 +1934,17 @@
         // Звук дождя зацикливается
         sounds.rain.loop = true;
         sounds.rain.volume = 0.2;
+        
+        // Окружающие звуки зацикливаются
+        sounds.ambient_water.loop = true;
+        sounds.ambient_water.volume = 0.15;
+        sounds.ambient_lava.loop = true;
+        sounds.ambient_lava.volume = 0.2;
 
         let lastStepTime = 0;
         let lastStepBlock = null;
+        let isNearWater = false;
+        let isNearLava = false;
 
         // Система прочности блоков
         const blockHardness = {
@@ -1964,9 +2287,48 @@
             // Переводим координаты экрана в координаты мира
             const worldX = mouse.x + camera.x;
             const worldY = mouse.y + camera.y;
+            
+            // Находим координаты блока в сетке
+            const tileX = Math.floor(worldX / TILE_SIZE);
+            const tileY = Math.floor(worldY / TILE_SIZE);
+
+            // Проверяем дистанцию до игрока
+            const pCenterX = player.x + PLAYER_WIDTH / 2;
+            const pCenterY = player.y + PLAYER_HEIGHT / 2;
+            const dist = Math.hypot(pCenterX - worldX, pCenterY - worldY);
 
             // Проверяем атаку мобов оружием
             const currentItem = hotbarItems[activeSlot];
+            
+            // Использование зажигалки - поджигание блоков или активация портала
+            if (currentItem.type === 'lighter' && dist < REACH_DISTANCE) {
+                if (tileY >= 0 && tileY < worldData.length && tileX >= 0 && tileX < worldData[0].length) {
+                    const blockType = worldData[tileY][tileX];
+                    
+                    // Активация портала
+                    if (blockType === 29) { // Обсидиан
+                        if (checkAndIgnitePortal(tileX, tileY)) {
+                            showNotification('Портал активирован!', 'success');
+                        }
+                        return;
+                    }
+                    
+                    // Поджигание блока (ставим огонь сверху)
+                    if (blockType !== 0 && tileY - 1 >= 0 && worldData[tileY - 1][tileX] === 0) {
+                        worldData[tileY - 1][tileX] = 33; // Огонь (новый блок)
+                        // Добавляем огонь в массив (горит 30-60 секунд)
+                        burningBlocks.push({ 
+                            x: tileX, 
+                            y: tileY - 1, 
+                            timer: 30000 + Math.random() * 30000 
+                        });
+                        showNotification('Подожгли блок!', 'info');
+                        return;
+                    }
+                }
+                return;
+            }
+            
             const isWeapon = weaponDamage[currentItem.type] !== undefined;
             
             if (isWeapon) {
@@ -2008,15 +2370,6 @@
                     }
                 }
             }
-
-            // Находим координаты блока в сетке
-            const tileX = Math.floor(worldX / TILE_SIZE);
-            const tileY = Math.floor(worldY / TILE_SIZE);
-
-            // Проверяем дистанцию до игрока
-            const pCenterX = player.x + PLAYER_WIDTH / 2;
-            const pCenterY = player.y + PLAYER_HEIGHT / 2;
-            const dist = Math.hypot(pCenterX - worldX, pCenterY - worldY);
 
             if (dist > REACH_DISTANCE) {
                 resetMining();
@@ -2266,6 +2619,22 @@
                 }
             }
         }
+        
+        // Обновление огня
+        function updateBurningBlocks(deltaTime) {
+            for (let i = burningBlocks.length - 1; i >= 0; i--) {
+                const fire = burningBlocks[i];
+                fire.timer -= deltaTime;
+                
+                if (fire.timer <= 0) {
+                    // Тушим огонь
+                    if (worldData[fire.y] && worldData[fire.y][fire.x] === 33) {
+                        worldData[fire.y][fire.x] = 0;
+                    }
+                    burningBlocks.splice(i, 1);
+                }
+            }
+        }
 
         function placeBlock(x, y) {
             const currentItem = hotbarItems[activeSlot];
@@ -2284,6 +2653,70 @@
                 currentItem.type = 'bucket'; // Ведро становится пустым
                 updateHotbarDisplay();
                 showNotification('Вылили воду', 'info');
+                
+                // Проверяем соседние блоки на наличие лавы и превращаем её в обсидиан
+                const directions = [
+                    {dx: -1, dy: 0}, {dx: 1, dy: 0},  // Лево, право
+                    {dx: 0, dy: -1}, {dx: 0, dy: 1},  // Верх, низ
+                    {dx: -1, dy: -1}, {dx: 1, dy: -1}, // Диагонали верх
+                    {dx: -1, dy: 1}, {dx: 1, dy: 1}    // Диагонали низ
+                ];
+                
+                let lavaConverted = false;
+                
+                for (let dir of directions) {
+                    const checkX = x + dir.dx;
+                    const checkY = y + dir.dy;
+                    
+                    if (checkY >= 0 && checkY < worldData.length && checkX >= 0 && checkX < worldData[0].length) {
+                        if (worldData[checkY][checkX] === 11) { // Лава
+                            worldData[checkY][checkX] = 29; // Превращаем в обсидиан
+                            lavaConverted = true;
+                            
+                            // Создаем МНОГО партиклов пара в месте превращения
+                            const centerX = checkX * TILE_SIZE + TILE_SIZE / 2;
+                            const centerY = checkY * TILE_SIZE + TILE_SIZE / 2;
+                            
+                            // Белый пар (основной эффект)
+                            for (let i = 0; i < 30; i++) {
+                                particles.push({
+                                    x: centerX + (Math.random() - 0.5) * TILE_SIZE * 1.5,
+                                    y: centerY + (Math.random() - 0.5) * TILE_SIZE * 1.5,
+                                    vx: (Math.random() - 0.5) * 4,
+                                    vy: -2 - Math.random() * 3,
+                                    life: 2.0,
+                                    maxLife: 2.0,
+                                    color: 'rgba(255, 255, 255, 1.0)',
+                                    size: 5 + Math.random() * 5,
+                                    gravity: -0.1
+                                });
+                            }
+                            
+                            // Серый дым
+                            for (let i = 0; i < 20; i++) {
+                                particles.push({
+                                    x: centerX + (Math.random() - 0.5) * TILE_SIZE,
+                                    y: centerY + (Math.random() - 0.5) * TILE_SIZE,
+                                    vx: (Math.random() - 0.5) * 3,
+                                    vy: -1 - Math.random() * 2,
+                                    life: 2.5,
+                                    maxLife: 2.5,
+                                    color: 'rgba(150, 150, 150, 0.8)',
+                                    size: 6 + Math.random() * 6,
+                                    gravity: -0.05
+                                });
+                            }
+                        }
+                    }
+                }
+                
+                if (lavaConverted) {
+                    console.log('Лава превращена в обсидиан! Создано партиклов:', particles.length);
+                    showNotification('Лава превратилась в обсидиан!', 'success');
+                    // Воспроизводим звук шипения
+                    playMiningSound(11); // Звук лавы
+                }
+                
                 return;
             }
             
@@ -2336,6 +2769,17 @@
             } else {
                 // Размещаем обычный блок
                 worldData[y][x] = blockType;
+                
+                // Особая логика для портала - телепортация в Ад
+                if (currentItem.type === 'nether_portal') {
+                    showNotification('Портал активирован! Входите...', 'success');
+                    checkAchievement('nether_portal', 1);
+                    
+                    // Телепортация через 1 секунду
+                    setTimeout(() => {
+                        enterPortal();
+                    }, 1000);
+                }
                 
                 // Воспроизводим звук размещения
                 playPlaceSound(blockType);
@@ -2451,8 +2895,31 @@
                 'golden_apple': '🍏',
                 'bed': '🛏️',
                 'lighter': '🔥',
+                'bow': '🏹',
+                'arrow': '➡️',
+                'string': '🧵',
+                'feather': '🪶',
+                'leather': '🟤',
+                // Броня
+                'leather_helmet': '🪖',
+                'leather_chestplate': '🦺',
+                'leather_leggings': '👖',
+                'leather_boots': '🥾',
+                'wooden_helmet': '🪖',
+                'wooden_chestplate': '🦺',
+                'wooden_leggings': '👖',
+                'wooden_boots': '🥾',
+                'iron_helmet': '🪖',
+                'iron_chestplate': '🦺',
+                'iron_leggings': '👖',
+                'iron_boots': '🥾',
+                'diamond_helmet': '🪖',
+                'diamond_chestplate': '🦺',
+                'diamond_leggings': '👖',
+                'diamond_boots': '🥾',
+                // Остальное
                 'grass': '🟩',
-                'dirt': '🟫',
+                'dirt': ' ',
                 'stone': '⬜',
                 'coal_ore': '⚫',
                 'coal': '⚫',
@@ -2465,7 +2932,7 @@
                 'wood': '🟤',
                 'leaves': '🍃',
                 'planks': '📦',
-                'workbench': '🔧',
+                'workbench': ' ',
                 'stick': '🥢',
                 'apple': '🍎',
                 'meat': '🍖',
@@ -2488,6 +2955,7 @@
                 'flint': '🪨',
                 'netherrack': '🟥',
                 'gold_ore_nether': '🟡',
+                'nether_portal': '🌀',
                 'farmland': '🟫',
                 'wheat_stage_0': '🌱',
                 'wheat_stage_1': '🌿',
@@ -2524,6 +2992,29 @@
                 'water_bucket': 'Ведро с водой',
                 'golden_apple': 'Золотое яблоко',
                 'bed': 'Кровать',
+                'bow': 'Лук',
+                'arrow': 'Стрела',
+                'string': 'Нить',
+                'feather': 'Перо',
+                'leather': 'Кожа',
+                // Броня
+                'leather_helmet': 'Кожаный шлем',
+                'leather_chestplate': 'Кожаный нагрудник',
+                'leather_leggings': 'Кожаные поножи',
+                'leather_boots': 'Кожаные ботинки',
+                'wooden_helmet': 'Деревянный шлем',
+                'wooden_chestplate': 'Деревянный нагрудник',
+                'wooden_leggings': 'Деревянные поножи',
+                'wooden_boots': 'Деревянные ботинки',
+                'iron_helmet': 'Железный шлем',
+                'iron_chestplate': 'Железный нагрудник',
+                'iron_leggings': 'Железные поножи',
+                'iron_boots': 'Железные ботинки',
+                'diamond_helmet': 'Алмазный шлем',
+                'diamond_chestplate': 'Алмазный нагрудник',
+                'diamond_leggings': 'Алмазные поножи',
+                'diamond_boots': 'Алмазные ботинки',
+                // Остальное
                 'grass': 'Блок травы',
                 'dirt': 'Земля',
                 'stone': 'Камень',
@@ -2561,6 +3052,7 @@
                 'flint': 'Кремень',
                 'lighter': 'Зажигалка',
                 'netherrack': 'Незерак',
+                'nether_portal': 'Портал в Ад',
                 'farmland': 'Грядка'
             };
             return names[itemType] || 'Неизвестный предмет';
@@ -2661,6 +3153,24 @@
                     <div class="effect-icon">🍖</div>
                     <div class="effect-info">
                         <div class="effect-name">Голод</div>
+                        <div class="effect-time">Осталось: ${minutes}:${seconds.toString().padStart(2, '0')}</div>
+                    </div>
+                `;
+                list.appendChild(effectItem);
+            }
+            
+            if (playerEffects.burning.active && playerEffects.burning.endTime > now) {
+                hasActiveEffects = true;
+                const timeLeft = Math.ceil((playerEffects.burning.endTime - now) / 1000);
+                const minutes = Math.floor(timeLeft / 60);
+                const seconds = timeLeft % 60;
+                
+                const effectItem = document.createElement('div');
+                effectItem.className = 'effect-item';
+                effectItem.innerHTML = `
+                    <div class="effect-icon">🔥</div>
+                    <div class="effect-info">
+                        <div class="effect-name">Горение</div>
                         <div class="effect-time">Осталось: ${minutes}:${seconds.toString().padStart(2, '0')}</div>
                     </div>
                 `;
@@ -2875,6 +3385,9 @@
 
             // Обновляем крафт сетку
             updateCraftingDisplay();
+            
+            // Обновляем слоты брони
+            updateArmorDisplay();
         }
 
         function updateCraftingDisplay() {
@@ -2904,8 +3417,105 @@
             // Проверяем рецепты и обновляем результат
             checkCraftingRecipes();
         }
+        
+        function updateArmorDisplay() {
+            document.querySelectorAll('.armor-slot').forEach((slot, idx) => {
+                const item = armorSlots[idx];
+                if (item.type && item.count > 0) {
+                    const emoji = getItemEmoji(item.type);
+                    slot.innerHTML = `${emoji}`;
+                } else {
+                    slot.innerHTML = '';
+                }
+                
+                slot.onclick = (e) => {
+                    e.preventDefault();
+                    handleArmorClick(idx, false);
+                };
+                slot.oncontextmenu = (e) => {
+                    e.preventDefault();
+                    handleArmorClick(idx, true);
+                };
+                slot.onmouseenter = (e) => {
+                    if (item.type) showTooltip(item.type, e.clientX, e.clientY);
+                };
+                slot.onmouseleave = () => hideTooltip();
+            });
+        }
+        
+        function handleArmorClick(index, isRightClick = false) {
+            const targetSlot = armorSlots[index];
+            
+            // Проверяем можно ли поместить предмет в этот слот брони
+            if (heldItem && heldItem.type) {
+                // Проверяем что это броня для этого слота
+                if (armorTypes[index].includes(heldItem.type)) {
+                    // Меняем местами
+                    const temp = { type: targetSlot.type, count: targetSlot.count, durability: targetSlot.durability };
+                    targetSlot.type = heldItem.type;
+                    targetSlot.count = heldItem.count;
+                    targetSlot.durability = heldItem.durability;
+                    
+                    if (temp.type) {
+                        heldItem = temp;
+                    } else {
+                        heldItem = null;
+                    }
+                } else {
+                    showNotification('Этот предмет нельзя надеть в этот слот!', 'warning');
+                }
+            } else if (!heldItem && targetSlot.type) {
+                // Берем броню из слота
+                heldItem = { type: targetSlot.type, count: targetSlot.count, durability: targetSlot.durability };
+                targetSlot.type = null;
+                targetSlot.count = 0;
+                targetSlot.durability = null;
+            }
+            
+            updateArmorDisplay();
+        }
 
         let heldItem = null; // Предмет в руке игрока
+        
+        // Функция расчета защиты от брони
+        function applyArmorProtection(damage) {
+            let totalProtection = 0;
+            
+            // Суммируем защиту от всех надетых частей брони
+            armorSlots.forEach(slot => {
+                if (slot.type && armorProtection[slot.type]) {
+                    totalProtection += armorProtection[slot.type];
+                }
+            });
+            
+            // Максимальная защита 80%
+            if (totalProtection > 0.8) totalProtection = 0.8;
+            
+            // Применяем защиту
+            const reducedDamage = damage * (1 - totalProtection);
+            return Math.max(1, reducedDamage); // Минимум 1 урона
+        }
+        
+        // Функция уменьшения прочности брони при получении урона
+        function damageArmor() {
+            armorSlots.forEach(slot => {
+                if (slot.type && slot.durability !== null) {
+                    slot.durability -= 1;
+                    
+                    if (slot.durability <= 0) {
+                        // Броня сломалась
+                        showNotification(`${getItemName(slot.type)} сломалась!`, 'warning');
+                        slot.type = null;
+                        slot.count = 0;
+                        slot.durability = null;
+                        
+                        if (inventoryOpen) {
+                            updateArmorDisplay();
+                        }
+                    }
+                }
+            });
+        }
 
         function handleInventoryClick(type, index, isRightClick = false) {
             let targetSlot;
@@ -3317,6 +3927,101 @@
             {
                 pattern: [null, null, null, 'wool', 'wool', 'wool', 'planks', 'planks', 'planks'],
                 result: { type: 'bed', count: 1 }
+            },
+            
+            // === БРОНЯ ===
+            // Кожаная броня
+            {
+                pattern: ['leather', 'leather', 'leather', 'leather', null, 'leather', null, null, null],
+                result: { type: 'leather_helmet', count: 1 }
+            },
+            {
+                pattern: ['leather', null, 'leather', 'leather', 'leather', 'leather', 'leather', 'leather', 'leather'],
+                result: { type: 'leather_chestplate', count: 1 }
+            },
+            {
+                pattern: ['leather', 'leather', 'leather', 'leather', null, 'leather', 'leather', null, 'leather'],
+                result: { type: 'leather_leggings', count: 1 }
+            },
+            {
+                pattern: ['leather', null, 'leather', 'leather', null, 'leather', null, null, null],
+                result: { type: 'leather_boots', count: 1 }
+            },
+            
+            // Деревянная броня
+            {
+                pattern: ['planks', 'planks', 'planks', 'planks', null, 'planks', null, null, null],
+                result: { type: 'wooden_helmet', count: 1 }
+            },
+            {
+                pattern: ['planks', null, 'planks', 'planks', 'planks', 'planks', 'planks', 'planks', 'planks'],
+                result: { type: 'wooden_chestplate', count: 1 }
+            },
+            {
+                pattern: ['planks', 'planks', 'planks', 'planks', null, 'planks', 'planks', null, 'planks'],
+                result: { type: 'wooden_leggings', count: 1 }
+            },
+            {
+                pattern: ['planks', null, 'planks', 'planks', null, 'planks', null, null, null],
+                result: { type: 'wooden_boots', count: 1 }
+            },
+            
+            // Железная броня
+            {
+                pattern: ['iron_ingot', 'iron_ingot', 'iron_ingot', 'iron_ingot', null, 'iron_ingot', null, null, null],
+                result: { type: 'iron_helmet', count: 1 }
+            },
+            {
+                pattern: ['iron_ingot', null, 'iron_ingot', 'iron_ingot', 'iron_ingot', 'iron_ingot', 'iron_ingot', 'iron_ingot', 'iron_ingot'],
+                result: { type: 'iron_chestplate', count: 1 }
+            },
+            {
+                pattern: ['iron_ingot', 'iron_ingot', 'iron_ingot', 'iron_ingot', null, 'iron_ingot', 'iron_ingot', null, 'iron_ingot'],
+                result: { type: 'iron_leggings', count: 1 }
+            },
+            {
+                pattern: ['iron_ingot', null, 'iron_ingot', 'iron_ingot', null, 'iron_ingot', null, null, null],
+                result: { type: 'iron_boots', count: 1 }
+            },
+            
+            // Алмазная броня
+            {
+                pattern: ['diamond', 'diamond', 'diamond', 'diamond', null, 'diamond', null, null, null],
+                result: { type: 'diamond_helmet', count: 1 }
+            },
+            {
+                pattern: ['diamond', null, 'diamond', 'diamond', 'diamond', 'diamond', 'diamond', 'diamond', 'diamond'],
+                result: { type: 'diamond_chestplate', count: 1 }
+            },
+            {
+                pattern: ['diamond', 'diamond', 'diamond', 'diamond', null, 'diamond', 'diamond', null, 'diamond'],
+                result: { type: 'diamond_leggings', count: 1 }
+            },
+            {
+                pattern: ['diamond', null, 'diamond', 'diamond', null, 'diamond', null, null, null],
+                result: { type: 'diamond_boots', count: 1 }
+            },
+            
+            // Лук
+            {
+                pattern: [null, 'stick', 'string', 'stick', null, 'string', null, 'stick', 'string'],
+                result: { type: 'bow', count: 1 }
+            },
+            {
+                pattern: ['string', 'stick', null, 'string', null, 'stick', 'string', 'stick', null],
+                result: { type: 'bow', count: 1 }
+            },
+            
+            // Стрелы (4 штуки)
+            {
+                pattern: [null, 'flint', null, null, 'stick', null, null, 'feather', null],
+                result: { type: 'arrow', count: 4 }
+            },
+            
+            // Портал в Ад (8 обсидиана по кругу + алмаз в центре)
+            {
+                pattern: ['obsidian', 'obsidian', 'obsidian', 'obsidian', 'diamond', 'obsidian', 'obsidian', 'obsidian', 'obsidian'],
+                result: { type: 'nether_portal', count: 1 }
             }
         ];
 
@@ -3531,6 +4236,7 @@
                 player.hunger = savedData.player.hunger;
                 hotbarItems = savedData.hotbarItems;
                 inventoryItems = savedData.inventoryItems;
+                armorSlots = savedData.armorSlots || Array(4).fill(null).map(() => ({ type: null, count: 0, durability: null }));
                 chestStorages = savedData.chestStorages || {};
                 achievements = savedData.achievements || resetAchievements();
                 totalBlocksMined = savedData.totalBlocksMined || 0;
@@ -3629,6 +4335,7 @@
                 { type: null, count: 0, durability: null }
             ];
             inventoryItems = Array(27).fill(null).map(() => ({ type: null, count: 0, durability: null }));
+            armorSlots = Array(4).fill(null).map(() => ({ type: null, count: 0, durability: null }));
         }
         
         // Сброс достижений для нового мира
@@ -3664,6 +4371,7 @@
                 },
                 hotbarItems: hotbarItems,
                 inventoryItems: inventoryItems,
+                armorSlots: armorSlots,
                 chestStorages: chestStorages,
                 achievements: achievements,
                 totalBlocksMined: totalBlocksMined,
@@ -3916,13 +4624,13 @@
             const height = worldData.length;
             const groundLevel = 20;
             
-            // Генерируем 5-10 лавовых озёр на глубине 80+
-            const lakeCount = 5 + Math.floor(Math.random() * 6);
+            // Генерируем 8-15 лавовых озёр на глубине 80+
+            const lakeCount = 8 + Math.floor(Math.random() * 8);
             
             for (let i = 0; i < lakeCount; i++) {
                 const x = 10 + Math.floor(Math.random() * (width - 20));
                 const y = groundLevel + 80 + Math.floor(Math.random() * (height - groundLevel - 90));
-                const radius = 2 + Math.floor(Math.random() * 3); // Радиус 2-4 блока
+                const radius = 3 + Math.floor(Math.random() * 4); // Радиус 3-6 блоков
                 
                 // Создаём лавовое озеро
                 for (let dy = -radius; dy <= radius; dy++) {
@@ -3939,17 +4647,37 @@
                     }
                 }
                 
-                // Спавним обсидиан рядом с лавой (2-4 блока)
-                const obsidianCount = 2 + Math.floor(Math.random() * 3);
-                for (let j = 0; j < obsidianCount; j++) {
-                    const angle = Math.random() * Math.PI * 2;
-                    const distance = radius + 1 + Math.floor(Math.random() * 2);
-                    const ox = x + Math.floor(Math.cos(angle) * distance);
-                    const oy = y + Math.floor(Math.sin(angle) * distance);
-                    
-                    if (oy >= 0 && oy < height && ox >= 0 && ox < width) {
-                        if (worldData[oy][ox] === 3) { // Только если это камень
-                            worldData[oy][ox] = 29; // Обсидиан
+                // Генерируем обсидиан вокруг лавы (имитация контакта с водой)
+                // Проверяем все блоки вокруг лавового озера
+                for (let dy = -radius - 2; dy <= radius + 2; dy++) {
+                    for (let dx = -radius - 2; dx <= radius + 2; dx++) {
+                        const nx = x + dx;
+                        const ny = y + dy;
+                        
+                        if (ny >= 0 && ny < height && nx >= 0 && nx < width) {
+                            // Если это камень рядом с лавой
+                            if (worldData[ny][nx] === 3) {
+                                // Проверяем есть ли лава рядом
+                                let hasLavaNearby = false;
+                                for (let cdy = -1; cdy <= 1; cdy++) {
+                                    for (let cdx = -1; cdx <= 1; cdx++) {
+                                        const checkY = ny + cdy;
+                                        const checkX = nx + cdx;
+                                        if (checkY >= 0 && checkY < height && checkX >= 0 && checkX < width) {
+                                            if (worldData[checkY][checkX] === 11) {
+                                                hasLavaNearby = true;
+                                                break;
+                                            }
+                                        }
+                                    }
+                                    if (hasLavaNearby) break;
+                                }
+                                
+                                // 40% шанс превратить камень в обсидиан если рядом лава
+                                if (hasLavaNearby && Math.random() < 0.4) {
+                                    worldData[ny][nx] = 29; // Обсидиан
+                                }
+                            }
                         }
                     }
                 }
@@ -3962,15 +4690,15 @@
             const height = worldData.length;
             const groundLevel = 20;
             
-            // Генерируем 2-4 заброшенные шахты на уровне алмазов (глубина 50+)
-            const mineCount = 2 + Math.floor(Math.random() * 3);
+            // Генерируем 8-12 заброшенных шахт на разных глубинах (40+)
+            const mineCount = 8 + Math.floor(Math.random() * 5);
             
             for (let i = 0; i < mineCount; i++) {
                 const startX = 20 + Math.floor(Math.random() * (width - 40));
-                const startY = groundLevel + 50 + Math.floor(Math.random() * 30);
+                const startY = groundLevel + 40 + Math.floor(Math.random() * 60); // Глубина 40-100
                 
-                // Создаём горизонтальный туннель длиной 10-20 блоков
-                const tunnelLength = 10 + Math.floor(Math.random() * 11);
+                // Создаём горизонтальный туннель длиной 15-30 блоков
+                const tunnelLength = 15 + Math.floor(Math.random() * 16);
                 
                 for (let x = startX; x < startX + tunnelLength && x < width; x++) {
                     // Туннель высотой 3 блока
@@ -3981,8 +4709,8 @@
                         }
                     }
                     
-                    // Пол из досок
-                    if (startY + 3 < height) {
+                    // Пол из досок (с пропусками для реалистичности)
+                    if (startY + 3 < height && Math.random() < 0.9) {
                         worldData[startY + 3][x] = 13; // Доски
                     }
                     
@@ -3999,8 +4727,33 @@
                     }
                 }
                 
-                // Размещаем 1-2 сундука с лутом
-                const chestCount = 1 + Math.floor(Math.random() * 2);
+                // Добавляем боковые ответвления (1-3 штуки)
+                const branchCount = 1 + Math.floor(Math.random() * 3);
+                for (let b = 0; b < branchCount; b++) {
+                    const branchStartX = startX + 5 + Math.floor(Math.random() * (tunnelLength - 10));
+                    const branchLength = 5 + Math.floor(Math.random() * 8);
+                    const branchDirection = Math.random() < 0.5 ? 1 : -1; // Вверх или вниз
+                    
+                    for (let i = 0; i < branchLength; i++) {
+                        const branchY = startY + (i * branchDirection);
+                        
+                        if (branchY >= 0 && branchY < height) {
+                            // Туннель 2 блока в ширину
+                            worldData[branchY][branchStartX] = 0;
+                            if (branchStartX + 1 < width) {
+                                worldData[branchY][branchStartX + 1] = 0;
+                            }
+                            
+                            // Факел каждые 4 блока
+                            if (i % 4 === 0 && branchStartX + 1 < width) {
+                                worldData[branchY][branchStartX + 1] = 28;
+                            }
+                        }
+                    }
+                }
+                
+                // Размещаем 2-4 сундука с лутом
+                const chestCount = 2 + Math.floor(Math.random() * 3);
                 for (let j = 0; j < chestCount; j++) {
                     const chestX = startX + 3 + Math.floor(Math.random() * (tunnelLength - 6));
                     const chestY = startY + 2;
@@ -4010,23 +4763,58 @@
                         
                         // Заполняем сундук лутом
                         const chestKey = `${chestX},${chestY}`;
-                        chestStorages[chestKey] = [];
+                        chestStorages[chestKey] = Array(27).fill(null).map(() => ({ type: null, count: 0, durability: null }));
                         
-                        // Алмазы (2-4 шт)
-                        const diamondCount = 2 + Math.floor(Math.random() * 3);
-                        chestStorages[chestKey].push({ type: 'diamond', count: diamondCount });
+                        let slotIndex = 0;
                         
-                        // Железные слитки (3-5 шт)
-                        const ironCount = 3 + Math.floor(Math.random() * 3);
-                        chestStorages[chestKey].push({ type: 'iron_ingot', count: ironCount });
+                        // Алмазы (1-2 шт) - 60% шанс
+                        if (Math.random() < 0.6) {
+                            const diamondCount = 1 + Math.floor(Math.random() * 2);
+                            chestStorages[chestKey][slotIndex] = { type: 'diamond', count: diamondCount, durability: null };
+                            slotIndex++;
+                        }
                         
-                        // Палки (5-10 шт)
-                        const stickCount = 5 + Math.floor(Math.random() * 6);
-                        chestStorages[chestKey].push({ type: 'stick', count: stickCount });
+                        // Железные слитки (2-6 шт) - 80% шанс
+                        if (Math.random() < 0.8) {
+                            const ironCount = 2 + Math.floor(Math.random() * 5);
+                            chestStorages[chestKey][slotIndex] = { type: 'iron_ingot', count: ironCount, durability: null };
+                            slotIndex++;
+                        }
                         
-                        // Доски (10-20 шт)
-                        const plankCount = 10 + Math.floor(Math.random() * 11);
-                        chestStorages[chestKey].push({ type: 'planks', count: plankCount });
+                        // Обсидиан (1-3 шт) - 50% шанс
+                        if (Math.random() < 0.5) {
+                            const obsidianCount = 1 + Math.floor(Math.random() * 3);
+                            chestStorages[chestKey][slotIndex] = { type: 'obsidian', count: obsidianCount, durability: null };
+                            slotIndex++;
+                        }
+                        
+                        // Дерево (3-5 шт) - 70% шанс
+                        if (Math.random() < 0.7) {
+                            const woodCount = 3 + Math.floor(Math.random() * 3);
+                            chestStorages[chestKey][slotIndex] = { type: 'wood', count: woodCount, durability: null };
+                            slotIndex++;
+                        }
+                        
+                        // Доски (4-7 шт) - 80% шанс
+                        if (Math.random() < 0.8) {
+                            const plankCount = 4 + Math.floor(Math.random() * 4);
+                            chestStorages[chestKey][slotIndex] = { type: 'planks', count: plankCount, durability: null };
+                            slotIndex++;
+                        }
+                        
+                        // Стрелы (1-3 шт) - 60% шанс
+                        if (Math.random() < 0.6) {
+                            const arrowCount = 1 + Math.floor(Math.random() * 3);
+                            chestStorages[chestKey][slotIndex] = { type: 'arrow', count: arrowCount, durability: null };
+                            slotIndex++;
+                        }
+                        
+                        // Нить (2-5 шт) - 50% шанс
+                        if (Math.random() < 0.5 && slotIndex < 27) {
+                            const stringCount = 2 + Math.floor(Math.random() * 4);
+                            chestStorages[chestKey][slotIndex] = { type: 'string', count: stringCount, durability: null };
+                            slotIndex++;
+                        }
                     }
                 }
             }
@@ -4042,77 +4830,95 @@
         // --- ПОРТАЛ И АД ---
         // Проверка и поджигание портала
         function checkAndIgnitePortal(x, y) {
-            // Проверяем форму портала (рамка из обсидиана 4x5)
-            // Форма: вертикальная рамка, внутри 2x3 пустого пространства
+            // Проверяем форму портала: прямоугольная рамка 5 блоков в ширину, 4 в высоту
+            // Внутри 3x2 пустого пространства
             
-            // Ищем левый нижний угол портала
-            let portalX = x;
-            let portalY = y;
+            // Пробуем найти портал в разных позициях относительно кликнутого блока
+            const searchOffsets = [];
             
-            // Проверяем несколько возможных позиций для рамки портала
-            const portalPatterns = [
-                // Стандартная вертикальная рамка 4 высоты, 3 ширины (внутри 2x3)
-                { startX: 0, startY: 0 }
-            ];
+            // Генерируем все возможные позиции клика в рамке 5x4
+            for (let dy = 0; dy < 4; dy++) {
+                for (let dx = 0; dx < 5; dx++) {
+                    searchOffsets.push({ dx: -dx, dy: -dy });
+                }
+            }
             
-            for (let pattern of portalPatterns) {
-                const px = x + pattern.startX;
-                const py = y + pattern.startY;
+            for (let offset of searchOffsets) {
+                const px = x + offset.dx; // Левый нижний угол
+                const py = y + offset.dy;
                 
-                // Проверяем рамку портала (4 блока в высоту, 3 в ширину)
                 let isValidPortal = true;
                 
-                // Проверяем нижнюю часть (3 блока обсидиана)
-                for (let dx = 0; dx < 3; dx++) {
+                // Проверяем нижнюю часть (5 блоков обсидиана)
+                for (let dx = 0; dx < 5; dx++) {
                     if (!isObsidian(px + dx, py)) {
                         isValidPortal = false;
                         break;
                     }
                 }
                 
-                // Проверяем боковые стороны (2 блока высоты с каждой стороны)
-                if (isValidPortal) {
-                    for (let dy = 1; dy <= 2; dy++) {
-                        if (!isObsidian(px, py - dy) || !isObsidian(px + 2, py - dy)) {
+                if (!isValidPortal) continue;
+                
+                // Проверяем левую сторону (2 блока высоты)
+                for (let dy = 1; dy <= 2; dy++) {
+                    if (!isObsidian(px, py - dy)) {
+                        isValidPortal = false;
+                        break;
+                    }
+                }
+                
+                if (!isValidPortal) continue;
+                
+                // Проверяем правую сторону (2 блока высоты)
+                for (let dy = 1; dy <= 2; dy++) {
+                    if (!isObsidian(px + 4, py - dy)) {
+                        isValidPortal = false;
+                        break;
+                    }
+                }
+                
+                if (!isValidPortal) continue;
+                
+                // Проверяем верхнюю часть (5 блоков обсидиана)
+                for (let dx = 0; dx < 5; dx++) {
+                    if (!isObsidian(px + dx, py - 3)) {
+                        isValidPortal = false;
+                        break;
+                    }
+                }
+                
+                if (!isValidPortal) continue;
+                
+                // Проверяем что внутри пусто или уже портал (3x2)
+                for (let dy = 1; dy <= 2; dy++) {
+                    for (let dx = 1; dx <= 3; dx++) {
+                        const innerBlock = worldData[py - dy][px + dx];
+                        if (innerBlock !== 0 && innerBlock !== 31) {
                             isValidPortal = false;
                             break;
                         }
                     }
-                }
-                
-                // Проверяем верхнюю часть (3 блока обсидиана)
-                if (isValidPortal) {
-                    for (let dx = 0; dx < 3; dx++) {
-                        if (!isObsidian(px + dx, py - 3)) {
-                            isValidPortal = false;
-                            break;
-                        }
-                    }
-                }
-                
-                // Проверяем что внутри пусто (2x2)
-                if (isValidPortal) {
-                    for (let dy = 1; dy <= 2; dy++) {
-                        for (let dx = 1; dx <= 1; dx++) {
-                            if (worldData[py - dy][px + dx] !== 0) {
-                                isValidPortal = false;
-                                break;
-                            }
-                        }
-                        if (!isValidPortal) break;
-                    }
+                    if (!isValidPortal) break;
                 }
                 
                 // Если нашли валидный портал - поджигаем
                 if (isValidPortal) {
-                    // Заполняем внутреннюю часть блоками портала
+                    console.log('Найден портал в позиции:', px, py, '(5x4, внутри 3x2)');
+                    // Заполняем внутреннюю часть блоками портала (3x2)
                     for (let dy = 1; dy <= 2; dy++) {
-                        worldData[py - dy][px + 1] = 31; // Портал
+                        for (let dx = 1; dx <= 3; dx++) {
+                            worldData[py - dy][px + dx] = 31; // Портал
+                        }
                     }
+                    
+                    // Достижение за постройку портала
+                    checkAchievement('nether_portal', 1);
+                    
                     return true;
                 }
             }
             
+            console.log('Портал не найден. Форма: 5 блоков в ширину, 4 в высоту (рамка из обсидиана)');
             return false;
         }
         
@@ -4288,6 +5094,9 @@
             // Обновление эффектов игрока
             updatePlayerEffects(ts);
             
+            // Обновление окружающих звуков (вода/лава)
+            updateAmbientSounds();
+            
             // Обновление индикатора часов
             updateClockDisplay();
             
@@ -4309,6 +5118,10 @@
             player.vy += GRAVITY;
             handleCollisions();
             checkUnderwater();
+            
+            // Проверка входа в воду/лаву для создания партиклов
+            checkLiquidSplash();
+            
             cameraUpdate(false);
 
             // Обновление мобов
@@ -4320,6 +5133,9 @@
             // Обновление распадающейся листвы
             updateDecayingLeaves(16);
             
+            // Обновление огня
+            updateBurningBlocks(16);
+            
             // Обновление роста пшеницы
             updateGrowingCrops(16);
             
@@ -4328,6 +5144,20 @@
             
             // Обновление достижения исследователя
             updateExplorerAchievement();
+            
+            // Обновление партиклов
+            updateParticles(16);
+            
+            // Обновление стрел
+            updateArrows(16);
+            
+            // Партиклы эффекта голода
+            if (playerEffects.hunger.active && playerEffects.hunger.endTime > ts) {
+                if (ts - lastHungerParticleTime > 300) {
+                    createHungerEffectParticle(player.x, player.y);
+                    lastHungerParticleTime = ts;
+                }
+            }
             
             // Спавн мобов (животные днем, зомби ночью или во время дождя)
             mobSpawnTimer += 16;
@@ -4478,13 +5308,18 @@
                     soundType = isRaining ? 'step_wet_grass' : 'step_grass';
                     break;
                 case 2: // Земля
-                    soundType = isRaining ? 'step_wet_grass' : 'step_dirt';
+                    soundType = 'step_dirt';
+                    break;
+                case 30: // Гравий
+                    soundType = 'step_gravel';
                     break;
                 case 3: // Камень
                 case 4: // Угольная руда
                 case 5: // Железная руда
                 case 6: // Золотая руда
                 case 7: // Алмазная руда
+                case 29: // Обсидиан
+                case 32: // Незерак
                     soundType = 'step_stone';
                     break;
                 case 8: // Дерево
@@ -4517,11 +5352,16 @@
             // Определяем тип звука по блоку
             switch(blockType) {
                 case 1: // Трава
-                case 2: // Земля
                 case 9: // Листва
                 case 20: // Песок
                 case 21: // Шерсть
                     soundType = 'knock_grass';
+                    break;
+                case 2: // Земля
+                    soundType = 'knock_dirt';
+                    break;
+                case 30: // Гравий
+                    soundType = 'knock_gravel';
                     break;
                 case 3: // Камень
                 case 4: // Угольная руда
@@ -4531,6 +5371,8 @@
                 case 15: // Угольный блок
                 case 16: // Печь
                 case 14: // Стекло
+                case 29: // Обсидиан
+                case 32: // Незерак
                     soundType = 'knock_stone';
                     break;
                 case 8: // Дерево
@@ -4577,15 +5419,26 @@
                 let tileY = Math.floor(pt.y / TILE_SIZE);
                 if(tileY >= 0 && tileY < worldData.length && tileX >= 0 && tileX < worldData[0].length) {
                     const block = worldData[tileY][tileX];
-                    // Жидкости не блокируют движение
-                    if (block > 0 && !liquidBlocks.includes(block)) {
-                        return {tileX, tileY};
+                    
+                    // Проверка на огонь - поджигаем игрока
+                    if (block === 33) {
+                        if (!playerEffects.burning.active) {
+                            playerEffects.burning.active = true;
+                            playerEffects.burning.endTime = performance.now() + 3000; // 3 секунды
+                            showNotification('Вы горите!', 'error');
+                        }
                     }
+                    
                     // Проверка на лаву - урон
                     if (block === 11) {
                         player.hp -= 0.5;
                         if (player.hp < 0) player.hp = 0;
                         updateHud();
+                    }
+                    
+                    // Жидкости и огонь не блокируют движение
+                    if (block > 0 && !liquidBlocks.includes(block) && block !== 33) {
+                        return {tileX, tileY};
                     }
                 }
             }
@@ -4617,6 +5470,37 @@
                 player.isUnderwater = (worldData[tileY][tileX] === 10); // 10 = вода
             } else {
                 player.isUnderwater = false;
+            }
+        }
+        
+        function checkLiquidSplash() {
+            // Проверяем центр игрока
+            const centerX = player.x + PLAYER_WIDTH / 2;
+            const centerY = player.y + PLAYER_HEIGHT / 2;
+            
+            const tileX = Math.floor(centerX / TILE_SIZE);
+            const tileY = Math.floor(centerY / TILE_SIZE);
+            
+            if (tileY >= 0 && tileY < worldData.length && tileX >= 0 && tileX < worldData[0].length) {
+                const block = worldData[tileY][tileX];
+                const isInWater = (block === 10);
+                const isInLava = (block === 11);
+                
+                // Создаем партиклы при входе в воду с достаточной скоростью
+                if (isInWater && !wasInWater && player.vy > 3) {
+                    createWaterSplashParticles(centerX, centerY);
+                }
+                
+                // Создаем партиклы при входе в лаву с достаточной скоростью
+                if (isInLava && !wasInLava && player.vy > 3) {
+                    createLavaSplashParticles(centerX, centerY);
+                }
+                
+                wasInWater = isInWater;
+                wasInLava = isInLava;
+            } else {
+                wasInWater = false;
+                wasInLava = false;
             }
         }
 
@@ -5042,6 +5926,82 @@
                     playerEffects.hunger.active = false;
                 }
             }
+            
+            // Эффект горения
+            if (playerEffects.burning.active) {
+                if (ts >= playerEffects.burning.endTime) {
+                    playerEffects.burning.active = false;
+                } else {
+                    // Урон 2 ХП/с = 0.032 ХП каждые 16мс
+                    player.hp -= 0.032;
+                    if (player.hp < 0) player.hp = 0;
+                    updateHud();
+                    
+                    // Создаем партиклы огня вокруг игрока
+                    if (Math.random() < 0.3) {
+                        particles.push({
+                            x: player.x + Math.random() * PLAYER_WIDTH,
+                            y: player.y + Math.random() * PLAYER_HEIGHT,
+                            vx: (Math.random() - 0.5) * 2,
+                            vy: -1 - Math.random() * 2,
+                            life: 0.5,
+                            maxLife: 0.5,
+                            color: Math.random() < 0.5 ? 'rgba(255, 100, 0, 1.0)' : 'rgba(255, 200, 0, 1.0)',
+                            size: 3 + Math.random() * 3,
+                            gravity: -0.1
+                        });
+                    }
+                }
+            }
+        }
+        
+        // --- ОКРУЖАЮЩИЕ ЗВУКИ ---
+        function updateAmbientSounds() {
+            // Проверяем близость к воде/лаве (радиус 10 блоков)
+            const checkRadius = 10;
+            const playerTileX = Math.floor((player.x + PLAYER_WIDTH / 2) / TILE_SIZE);
+            const playerTileY = Math.floor((player.y + PLAYER_HEIGHT / 2) / TILE_SIZE);
+            
+            let nearWater = false;
+            let nearLava = false;
+            
+            for (let dy = -checkRadius; dy <= checkRadius; dy++) {
+                for (let dx = -checkRadius; dx <= checkRadius; dx++) {
+                    const checkX = playerTileX + dx;
+                    const checkY = playerTileY + dy;
+                    
+                    if (checkY >= 0 && checkY < worldData.length && checkX >= 0 && checkX < worldData[0].length) {
+                        const blockType = worldData[checkY][checkX];
+                        
+                        if (blockType === 10) { // Вода
+                            nearWater = true;
+                        }
+                        if (blockType === 11) { // Лава
+                            nearLava = true;
+                        }
+                    }
+                }
+            }
+            
+            // Управление звуком воды
+            if (nearWater && !isNearWater) {
+                sounds.ambient_water.play().catch(e => console.log('Water sound failed:', e));
+                isNearWater = true;
+            } else if (!nearWater && isNearWater) {
+                sounds.ambient_water.pause();
+                sounds.ambient_water.currentTime = 0;
+                isNearWater = false;
+            }
+            
+            // Управление звуком лавы
+            if (nearLava && !isNearLava) {
+                sounds.ambient_lava.play().catch(e => console.log('Lava sound failed:', e));
+                isNearLava = true;
+            } else if (!nearLava && isNearLava) {
+                sounds.ambient_lava.pause();
+                sounds.ambient_lava.currentTime = 0;
+                isNearLava = false;
+            }
         }
 
         // --- ЧАСЫ ---
@@ -5109,6 +6069,8 @@
             drawDroppedItems();
             drawMobs();
             drawPlayer();
+            drawParticles(); // Рисуем партиклы
+            drawArrows(); // Рисуем стрелы
 
             ctx.restore();
             
@@ -5573,6 +6535,26 @@
                             ctx.fillRect(bx + 14, by + 8, 3, 3);
                             ctx.fillRect(bx + 24, by + 18, 3, 3);
                             break;
+                        case 33: // Огонь (анимированный)
+                            // Рисуем огонь с анимацией
+                            const fireFrame = Math.floor(Date.now() / 100) % 3;
+                            const fireOffset = fireFrame * 2;
+                            
+                            // Оранжевое пламя
+                            ctx.fillStyle = "#FF6600";
+                            ctx.fillRect(bx + 8, by + 16 - fireOffset, 6, 12 + fireOffset);
+                            ctx.fillRect(bx + 18, by + 20 - fireOffset, 6, 8 + fireOffset);
+                            
+                            // Желтое ядро
+                            ctx.fillStyle = "#FFFF00";
+                            ctx.fillRect(bx + 10, by + 20 - fireOffset, 4, 8 + fireOffset);
+                            ctx.fillRect(bx + 20, by + 24 - fireOffset, 3, 4 + fireOffset);
+                            
+                            // Красные языки пламени
+                            ctx.fillStyle = "#FF0000";
+                            ctx.fillRect(bx + 6, by + 12 - fireOffset, 4, 6);
+                            ctx.fillRect(bx + 22, by + 16 - fireOffset, 4, 6);
+                            break;
                     }
 
                     // Обводка
@@ -5695,13 +6677,14 @@
                 };
             } else {
                 // Днем спавним животных
-                const animalTypes = ['cow', 'sheep', 'pig'];
+                const animalTypes = ['cow', 'sheep', 'pig', 'chicken'];
                 mobType = animalTypes[Math.floor(Math.random() * animalTypes.length)];
                 
                 const animalStats = {
                     cow: { hp: 10, size: 28, speed: 1, dropItem: 'meat', dropCount: 2, aggressive: false },
                     sheep: { hp: 8, size: 26, speed: 1.2, dropItem: 'meat', dropCount: 1, aggressive: false },
-                    pig: { hp: 10, size: 24, speed: 1.5, dropItem: 'meat', dropCount: 2, aggressive: false }
+                    pig: { hp: 10, size: 24, speed: 1.5, dropItem: 'meat', dropCount: 2, aggressive: false },
+                    chicken: { hp: 5, size: 20, speed: 1.8, dropItem: 'feather', dropCount: 2, aggressive: false }
                 };
                 
                 stats = animalStats[mobType];
@@ -5767,9 +6750,14 @@
                     // Атака игрока при контакте
                     if (checkMobPlayerCollision(mob)) {
                         if (mob.attackCooldown <= 0) {
-                            player.hp -= mob.damage;
+                            const damage = applyArmorProtection(mob.damage);
+                            player.hp -= damage;
                             if (player.hp < 0) player.hp = 0;
                             updateHud();
+                            
+                            // Уменьшаем прочность брони
+                            damageArmor();
+                            
                             mob.attackCooldown = 1000; // 1 секунда кулдаун
                         }
                     }
@@ -5876,18 +6864,68 @@
                     
                     // Выпадают предметы
                     if (mob.type === 'sheep') {
-                        // Овца дропает мясо
-                        spawnDroppedItem(
-                            mob.x + mob.size / 2 + (Math.random() - 0.5) * 20, 
-                            mob.y + mob.size / 2, 
-                            'meat'
-                        );
+                        // Овца дропает мясо (1-2 шт)
+                        const meatCount = 1 + Math.floor(Math.random() * 2);
+                        for (let j = 0; j < meatCount; j++) {
+                            spawnDroppedItem(
+                                mob.x + mob.size / 2 + (Math.random() - 0.5) * 20, 
+                                mob.y + mob.size / 2, 
+                                'meat'
+                            );
+                        }
+                        // Кожа (1-2 шт)
+                        const leatherCount = 1 + Math.floor(Math.random() * 2);
+                        for (let j = 0; j < leatherCount; j++) {
+                            spawnDroppedItem(
+                                mob.x + mob.size / 2 + (Math.random() - 0.5) * 20, 
+                                mob.y + mob.size / 2, 
+                                'leather'
+                            );
+                        }
                         // И иногда шерсть (50% шанс)
                         if (Math.random() < 0.5) {
                             spawnDroppedItem(
                                 mob.x + mob.size / 2 + (Math.random() - 0.5) * 20, 
                                 mob.y + mob.size / 2, 
                                 'wool'
+                            );
+                        }
+                    } else if (mob.type === 'cow') {
+                        // Корова дропает мясо (1-2 шт)
+                        const meatCount = 1 + Math.floor(Math.random() * 2);
+                        for (let j = 0; j < meatCount; j++) {
+                            spawnDroppedItem(
+                                mob.x + mob.size / 2 + (Math.random() - 0.5) * 20, 
+                                mob.y + mob.size / 2, 
+                                'meat'
+                            );
+                        }
+                        // Кожа (1-2 шт)
+                        const leatherCount = 1 + Math.floor(Math.random() * 2);
+                        for (let j = 0; j < leatherCount; j++) {
+                            spawnDroppedItem(
+                                mob.x + mob.size / 2 + (Math.random() - 0.5) * 20, 
+                                mob.y + mob.size / 2, 
+                                'leather'
+                            );
+                        }
+                    } else if (mob.type === 'chicken') {
+                        // Курица дропает мясо (1-2 шт)
+                        const meatCount = 1 + Math.floor(Math.random() * 2);
+                        for (let j = 0; j < meatCount; j++) {
+                            spawnDroppedItem(
+                                mob.x + mob.size / 2 + (Math.random() - 0.5) * 20, 
+                                mob.y + mob.size / 2, 
+                                'meat'
+                            );
+                        }
+                        // Перья (1-3 шт)
+                        const featherCount = 1 + Math.floor(Math.random() * 3);
+                        for (let j = 0; j < featherCount; j++) {
+                            spawnDroppedItem(
+                                mob.x + mob.size / 2 + (Math.random() - 0.5) * 20, 
+                                mob.y + mob.size / 2, 
+                                'feather'
                             );
                         }
                     } else {
@@ -6037,6 +7075,42 @@
                     ctx.fillRect(10, mob.size - 6, 3, 6);
                     ctx.fillRect(mob.size - 13, mob.size - 6, 3, 6);
                     ctx.fillRect(mob.size - 6, mob.size - 6, 3, 6);
+                } else if (mob.type === 'chicken') {
+                    // Курица - белая с красным гребешком
+                    // Тело
+                    ctx.fillStyle = "#FFFFFF";
+                    ctx.fillRect(2, 8, mob.size - 4, mob.size - 14);
+                    
+                    // Голова
+                    ctx.fillStyle = "#FFFFFF";
+                    ctx.fillRect(mob.size - 8, 2, 8, 8);
+                    
+                    // Гребешок (красный)
+                    ctx.fillStyle = "#FF0000";
+                    ctx.fillRect(mob.size - 7, 0, 6, 3);
+                    ctx.fillRect(mob.size - 6, -1, 4, 2);
+                    
+                    // Клюв (желтый)
+                    ctx.fillStyle = "#FFD700";
+                    ctx.fillRect(mob.size - 2, 5, 3, 2);
+                    
+                    // Глаза
+                    ctx.fillStyle = "#000";
+                    ctx.fillRect(mob.size - 6, 4, 1, 1);
+                    
+                    // Крылья (серые)
+                    ctx.fillStyle = "#D3D3D3";
+                    ctx.fillRect(2, 10, 3, 6);
+                    ctx.fillRect(mob.size - 5, 10, 3, 6);
+                    
+                    // Ноги (желтые, тонкие)
+                    ctx.fillStyle = "#FFD700";
+                    ctx.fillRect(6, mob.size - 6, 2, 6);
+                    ctx.fillRect(mob.size - 8, mob.size - 6, 2, 6);
+                    
+                    // Хвост (перья)
+                    ctx.fillStyle = "#FFFFFF";
+                    ctx.fillRect(0, 10, 3, 8);
                 } else if (mob.type === 'zombie') {
                     // Зомби - зеленый гуманоид
                     // Ноги
@@ -6181,6 +7255,64 @@
             
             const currentItem = hotbarItems[activeSlot];
             
+            // Стрельба из лука
+            if (currentItem.type === 'bow') {
+                // Проверяем наличие стрел в инвентаре
+                let arrowSlot = null;
+                let arrowLocation = null;
+                
+                // Ищем стрелы в хотбаре
+                for (let i = 0; i < hotbarItems.length; i++) {
+                    if (hotbarItems[i].type === 'arrow' && hotbarItems[i].count > 0) {
+                        arrowSlot = hotbarItems[i];
+                        arrowLocation = 'hotbar';
+                        break;
+                    }
+                }
+                
+                // Если не нашли в хотбаре, ищем в инвентаре
+                if (!arrowSlot) {
+                    for (let i = 0; i < inventoryItems.length; i++) {
+                        if (inventoryItems[i].type === 'arrow' && inventoryItems[i].count > 0) {
+                            arrowSlot = inventoryItems[i];
+                            arrowLocation = 'inventory';
+                            break;
+                        }
+                    }
+                }
+                
+                if (!arrowSlot) {
+                    showNotification('Нет стрел!', 'warning');
+                    return;
+                }
+                
+                // Стреляем стрелой
+                shootArrow();
+                
+                // Уменьшаем количество стрел
+                arrowSlot.count--;
+                if (arrowSlot.count <= 0) {
+                    arrowSlot.type = null;
+                    arrowSlot.count = 0;
+                }
+                
+                // Уменьшаем прочность лука
+                if (currentItem.durability === null) {
+                    currentItem.durability = toolDurability['bow'];
+                }
+                currentItem.durability -= 1;
+                
+                if (currentItem.durability <= 0) {
+                    currentItem.type = null;
+                    currentItem.count = 0;
+                    currentItem.durability = null;
+                    showNotification('Ваш лук сломался!', 'warning');
+                }
+                
+                updateHotbarDisplay();
+                return;
+            }
+            
             // Проверяем клик по блокам (верстак, печь, сундук) или использование мотыги/ведра/зажигалки
             const worldX = mouse.x + camera.x;
             const worldY = mouse.y + camera.y;
@@ -6194,14 +7326,6 @@
                 
                 if (dist < REACH_DISTANCE) {
                     const blockType = worldData[tileY][tileX];
-                    
-                    // Использование зажигалки - поджигание портала
-                    if (currentItem.type === 'lighter' && blockType === 29) { // Обсидиан
-                        if (checkAndIgnitePortal(tileX, tileY)) {
-                            showNotification('Портал активирован!', 'success');
-                        }
-                        return;
-                    }
                     
                     // Использование мотыги - вспахивание земли/травы
                     if (currentItem.type && (currentItem.type === 'hoe' || currentItem.type === 'stone_hoe' || currentItem.type === 'iron_hoe' || currentItem.type === 'diamond_hoe')) {
@@ -6276,7 +7400,7 @@
                     }
                     
                     // Набор воды в ведро
-                    if (currentItem.type === 'bucket' && (blockType === 10 || blockType === 11)) { // Вода
+                    if (currentItem.type === 'bucket' && blockType === 10) { // Вода
                         currentItem.type = 'water_bucket';
                         updateHotbarDisplay();
                         showNotification('Набрали воду в ведро', 'info');
@@ -6771,8 +7895,21 @@
                 'gold_ore': 'gold_ingot'
             };
             
-            // Топливо
-            const fuelItems = ['coal', 'coal_block', 'planks', 'wood'];
+            // Топливо (включая деревянные предметы)
+            const fuelItems = [
+                'coal', 'coal_block', 'planks', 'wood', 'chest',
+                // Деревянные инструменты
+                'pickaxe', 'axe', 'shovel', 'sword', 'hoe',
+                'wooden_helmet', 'wooden_chestplate', 'wooden_leggings', 'wooden_boots'
+            ];
+            
+            console.log('Проверка печи:', {
+                input: furnaceInputSlot.type,
+                fuel: furnaceFuelSlot.type,
+                canSmelt: furnaceInputSlot.type && smeltingRecipes[furnaceInputSlot.type],
+                isFuel: furnaceFuelSlot.type && fuelItems.includes(furnaceFuelSlot.type),
+                burning: furnaceBurning
+            });
             
             if (furnaceInputSlot.type && smeltingRecipes[furnaceInputSlot.type] && 
                 furnaceFuelSlot.type && fuelItems.includes(furnaceFuelSlot.type)) {
@@ -6780,6 +7917,7 @@
                 if (!furnaceBurning) {
                     furnaceBurning = true;
                     furnaceProgress = 0;
+                    console.log('Печь запущена!');
                 }
             }
         }
